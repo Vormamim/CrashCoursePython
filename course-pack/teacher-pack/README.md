@@ -1,12 +1,10 @@
-# Python Crash Course (6 Lessons, Age 13+)
+# Python Crash Course (10 Lessons, Age 13+)
 
-This pack delivers six 60-minute lessons with 40 minutes of coding per lesson.
+This pack delivers ten 60-minute lessons with 40 minutes of coding per lesson.
 
-## Constraints Used
-- No loops or iteration
-- No user-defined functions
-- No dictionaries
-- No file handling
+## Course Progression
+- Lessons 1-6: no loops, no user-defined functions, no dictionaries, no file handling
+- Lessons 7-10: loops/iteration introduced (`for` and `while`) with Gemini prompt training
 
 ## Audience
 - 13 year olds with above-average maths, logical thinking, and English
@@ -27,6 +25,10 @@ This pack delivers six 60-minute lessons with 40 minutes of coding per lesson.
 - lesson-04-data-without-loops
 - lesson-05-structured-logic-challenge
 - lesson-06-capstone-simulation
+- lesson-07-loop-launch-for
+- lesson-08-loop-control-while
+- lesson-09-loop-patterns-mixed
+- lesson-10-loop-capstone-ai-safe
 - shared
 
 ## Shared Resources
@@ -34,6 +36,7 @@ This pack delivers six 60-minute lessons with 40 minutes of coding per lesson.
 - objective-question-bank.md
 - reflection-rubric.md
 - student-cheat-sheet.md
+- gemini-prompting-playbook.md
 
 ## Recommended Lesson Flow
 1. Guided tutorial (line-by-line build)
@@ -47,6 +50,10 @@ This pack delivers six 60-minute lessons with 40 minutes of coding per lesson.
 - lesson-04-data-without-loops/guided-tutorial.md
 - lesson-05-structured-logic-challenge/guided-tutorial.md
 - lesson-06-capstone-simulation/guided-tutorial.md
+- lesson-07-loop-launch-for/guided-tutorial.md
+- lesson-08-loop-control-while/guided-tutorial.md
+- lesson-09-loop-patterns-mixed/guided-tutorial.md
+- lesson-10-loop-capstone-ai-safe/guided-tutorial.md
 
 ## Delivery Notes
 - Keep starter files minimal and runnable.

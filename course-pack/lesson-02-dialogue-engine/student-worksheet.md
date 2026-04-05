@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 2
 
+## YA Theme Context
+This lesson is inspired by maze-escape YA stories where teams solve coded gates under pressure.
+You are the terminal operator receiving clues and computing whether a gate unlocks.
+Your code models how decisions are made from limited input data.
+
 ## Theory (What You Need to Know)
 - `input()` returns text (`str`) even if a number is typed.
 - Use `int()` to convert numeric text so arithmetic works.

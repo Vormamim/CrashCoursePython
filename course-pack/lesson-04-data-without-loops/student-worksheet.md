@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 4
 
+## YA Theme Context
+This lesson is inspired by school-house and team-competition YA worlds.
+You are running a live points board where houses gain and lose points.
+Your code models how scoreboards store grouped data and identify leaders.
+
 ## Theory (What You Need to Know)
 - A list stores values in order and can be edited.
 - Index positions start at `0`.

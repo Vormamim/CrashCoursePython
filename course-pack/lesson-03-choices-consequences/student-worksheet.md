@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 3
 
+## YA Theme Context
+This lesson is inspired by faction-choice YA stories where characters are sorted by traits and tests.
+You are building the assignment machine that decides where each recruit belongs.
+Your code models how rule-based systems make branching decisions.
+
 ## Theory (What You Need to Know)
 - `if` runs when its condition is true.
 - `elif` is checked only if earlier conditions are false.

@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 5
 
+## YA Theme Context
+This lesson is inspired by high-stakes checkpoint scenes in YA sci-fi adventures.
+You are part of the security team deciding whether travelers can pass.
+Your code models risk scoring and threshold-based approvals.
+
 ## Theory (What You Need to Know)
 - A program spec defines input, processing, and output.
 - Use variables to store each step so you can debug clearly.

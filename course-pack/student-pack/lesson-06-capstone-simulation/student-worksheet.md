@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 6
 
+## YA Theme Context
+This capstone is inspired by YA finale missions where teams combine every skill to survive and solve.
+You choose the scenario world and design your own simulation rules.
+Your code should feel like a system that could run inside that story world.
+
 ## Theory (What You Need to Know)
 - Plan first, then code: this prevents random errors.
 - A test table predicts outputs before you run the program.

@@ -1,5 +1,10 @@
 # Student Worksheet: Lesson 1
 
+## YA Theme Context
+This mission is inspired by arena-survival YA stories where characters are tracked by control teams.
+You are the mission operator preparing one tribute profile before the event begins.
+Your code represents how control systems store and update character data.
+
 ## Theory (What You Need to Know)
 - A variable is a named box that stores data.
 - Python data types used today: `int`, `float`, `str`, `bool`.
