@@ -1,0 +1,22 @@
+{
+  "lesson": "Lesson 6 Capstone Simulation",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "prints final report labels",
+      "input": ["30", "25", "10"],
+      "expect_contains": [
+        "Scenario:",
+        "Combined score:",
+        "Outcome:"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}

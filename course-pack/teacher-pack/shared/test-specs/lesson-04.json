@@ -1,0 +1,24 @@
+{
+  "lesson": "Lesson 4 Data Without Loops",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "prints required board lines",
+      "input": [],
+      "expect_contains": [
+        "Teams:",
+        "Points:",
+        "Term info:",
+        "Number of teams:",
+        "Current leader:"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}

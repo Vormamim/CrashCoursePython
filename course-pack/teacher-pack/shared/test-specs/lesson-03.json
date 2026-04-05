@@ -1,0 +1,30 @@
+{
+  "lesson": "Lesson 3 Choices and Consequences",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "command elite branch",
+      "input": ["96", "96"],
+      "expect_contains": [
+        "Assigned group:",
+        "Command Elite"
+      ],
+      "expect_exit": 0
+    },
+    {
+      "name": "support branch",
+      "input": ["40", "45"],
+      "expect_contains": [
+        "Assigned group:",
+        "Support"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}

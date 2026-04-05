@@ -1,0 +1,23 @@
+{
+  "lesson": "Lesson 1 Mission Control",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "prints profile labels",
+      "input": [],
+      "expect_contains": [
+        "Name:",
+        "District:",
+        "Score:",
+        "Active:"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}

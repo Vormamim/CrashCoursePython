@@ -1,0 +1,30 @@
+{
+  "lesson": "Lesson 2 Dialogue Engine",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "unlock path",
+      "input": ["15", "5"],
+      "expect_contains": [
+        "Unlock score:",
+        "Gate unlocked"
+      ],
+      "expect_exit": 0
+    },
+    {
+      "name": "deny path",
+      "input": ["5", "2"],
+      "expect_contains": [
+        "Unlock score:",
+        "Access denied"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}

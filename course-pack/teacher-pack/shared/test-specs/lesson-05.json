@@ -1,0 +1,30 @@
+{
+  "lesson": "Lesson 5 Structured Logic Challenge",
+  "timeout_sec": 3,
+  "enforce_constraints": {
+    "no_loops": true,
+    "no_functions": true,
+    "no_dicts": true,
+    "no_file_handling": true
+  },
+  "cases": [
+    {
+      "name": "high risk denied",
+      "input": ["20", "20", "1"],
+      "expect_contains": [
+        "Risk score:",
+        "Denied"
+      ],
+      "expect_exit": 0
+    },
+    {
+      "name": "low risk approved",
+      "input": ["95", "95", "10"],
+      "expect_contains": [
+        "Risk score:",
+        "Approved"
+      ],
+      "expect_exit": 0
+    }
+  ]
+}
