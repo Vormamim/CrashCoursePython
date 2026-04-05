@@ -1,17 +1,17 @@
 ---
 layout: default
 ---
-
 # Student Python Cheat Sheet
 
-## Course Rules
+## Rules
 
-- No loops
+This is a crash course, so these things are out of bounds
+
 - No user-defined functions
 - No dictionaries
 - No file handling
 
-## Quick Python Patterns
+## Quick Python
 
 ### 1) Variables and Types
 

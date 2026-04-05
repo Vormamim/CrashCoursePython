@@ -2,18 +2,17 @@
 layout: default
 title: Python Crash Course Student Pack
 ---
-
 # Python Crash Course Student Pack
 
-This site publishes the student-facing materials from the course pack.
+How To Use This Site
 
-## How To Use This Site
 1. Open the lesson worksheet.
 2. Work through the guided tutorial.
 3. Open the starter file in Python.
 4. Use the shared cheat sheet when needed.
 
 ## Lessons 1-6: Core Python Without Loops
+
 - [Lesson 1: Mission Control Worksheet](lesson-01-mission-control/student-worksheet.html)
 - [Lesson 1: Guided Tutorial](lesson-01-mission-control/guided-tutorial.html)
 - [Lesson 1: Starter Code](lesson-01-mission-control/starter.py)
@@ -34,6 +33,7 @@ This site publishes the student-facing materials from the course pack.
 - [Lesson 6: Starter Code](lesson-06-capstone-simulation/starter.py)
 
 ## Lessons 7-10: Loops And Gemini Prompting
+
 - [Lesson 7: Loop Launch Worksheet](lesson-07-loop-launch-for/student-worksheet.html)
 - [Lesson 7: Guided Tutorial](lesson-07-loop-launch-for/guided-tutorial.html)
 - [Lesson 7: Starter Code](lesson-07-loop-launch-for/starter.py)
@@ -48,8 +48,10 @@ This site publishes the student-facing materials from the course pack.
 - [Lesson 10: Starter Code](lesson-10-loop-capstone-ai-safe/starter.py)
 
 ## Shared Student Resources
+
 - [Student Cheat Sheet](shared/student-cheat-sheet.html)
 - [Gemini Prompting Quick Guide](shared/gemini-prompting-quick-guide.html)
 
 ## Teacher-Only Resources
+
 Teacher materials are intentionally not published on this site.
