@@ -48,6 +48,7 @@ This site publishes the student-facing materials from the course pack.
 
 ## Shared Student Resources
 - [Student Cheat Sheet](shared/student-cheat-sheet.html)
+- [Student Coding Jargon Glossary](shared/jargon-glossary.html)
 - [Gemini Prompting Quick Guide](shared/gemini-prompting-quick-guide.html)
 
 ## Teacher-Only Resources
