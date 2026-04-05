@@ -2,3 +2,9 @@ title: Python Student Pack
 description: Student-facing GitHub Pages site for the CrashCoursePython repository
 theme: minima
 markdown: kramdown
+header_pages: []
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
