@@ -83,12 +83,43 @@ a {
   margin-top: 0.9rem;
 }
 
-.lesson-label {
-  margin: 0 0 0.35rem;
-  padding: 0 0.8rem;
+.lesson-group {
+  border: 1px solid rgba(31, 42, 44, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 250, 240, 0.7);
+}
+
+.lesson-group[open] {
+  border-color: rgba(165, 64, 45, 0.28);
+  background: rgba(255, 250, 240, 0.95);
+}
+
+.lesson-group summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.58rem 0.8rem;
   color: var(--ink);
   font-size: 0.92rem;
   font-weight: 700;
+}
+
+.lesson-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-group summary::after {
+  content: "+";
+  float: right;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.lesson-group[open] summary::after {
+  content: "-";
+}
+
+.lesson-links {
+  padding: 0 0.35rem 0.35rem;
 }
 
 .site-nav h2 {
@@ -123,8 +154,8 @@ a {
 }
 
 .lesson-link {
-  margin-bottom: 0.18rem;
-  margin-left: 0.4rem;
+  margin-bottom: 0.14rem;
+  margin-left: 0;
   padding: 0.45rem 0.8rem;
   color: var(--muted);
   font-size: 0.92rem;

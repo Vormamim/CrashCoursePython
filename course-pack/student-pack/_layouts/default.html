@@ -26,70 +26,90 @@
 
           <section>
             <h2>Lessons 1-6</h2>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 1</p>
-              <a class="lesson-link" href="{{ '/lesson-01-mission-control/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-01-mission-control/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-01-mission-control/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-01-mission-control/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-01-mission-control/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 2</p>
-              <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-02-dialogue-engine/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-02-dialogue-engine/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 3</p>
-              <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-03-choices-consequences/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-03-choices-consequences/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 4</p>
-              <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-04-data-without-loops/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-04-data-without-loops/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 5</p>
-              <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-05-structured-logic-challenge/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-05-structured-logic-challenge/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 6</p>
-              <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-06-capstone-simulation/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-06-capstone-simulation/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/starter.py' | relative_url }}">Starter Code</a>
-            </div>
+            <details class="lesson-group"{% if page.url contains '/lesson-01-mission-control/' %} open{% endif %}>
+              <summary>Lesson 1</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-01-mission-control/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-01-mission-control/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-01-mission-control/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-01-mission-control/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-01-mission-control/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-02-dialogue-engine/' %} open{% endif %}>
+              <summary>Lesson 2</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-02-dialogue-engine/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-02-dialogue-engine/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-02-dialogue-engine/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-03-choices-consequences/' %} open{% endif %}>
+              <summary>Lesson 3</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-03-choices-consequences/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-03-choices-consequences/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-03-choices-consequences/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-04-data-without-loops/' %} open{% endif %}>
+              <summary>Lesson 4</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-04-data-without-loops/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-04-data-without-loops/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-04-data-without-loops/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-05-structured-logic-challenge/' %} open{% endif %}>
+              <summary>Lesson 5</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-05-structured-logic-challenge/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-05-structured-logic-challenge/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-05-structured-logic-challenge/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-06-capstone-simulation/' %} open{% endif %}>
+              <summary>Lesson 6</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-06-capstone-simulation/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-06-capstone-simulation/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-06-capstone-simulation/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
           </section>
 
           <section>
             <h2>Lessons 7-10</h2>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 7</p>
-              <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-07-loop-launch-for/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-07-loop-launch-for/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 8</p>
-              <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-08-loop-control-while/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-08-loop-control-while/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 9</p>
-              <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-09-loop-patterns-mixed/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-09-loop-patterns-mixed/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/starter.py' | relative_url }}">Starter Code</a>
-            </div>
-            <div class="lesson-group">
-              <p class="lesson-label">Lesson 10</p>
-              <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-10-loop-capstone-ai-safe/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
-              <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-10-loop-capstone-ai-safe/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
-              <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/starter.py' | relative_url }}">Starter Code</a>
-            </div>
+            <details class="lesson-group"{% if page.url contains '/lesson-07-loop-launch-for/' %} open{% endif %}>
+              <summary>Lesson 7</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-07-loop-launch-for/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-07-loop-launch-for/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-07-loop-launch-for/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-08-loop-control-while/' %} open{% endif %}>
+              <summary>Lesson 8</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-08-loop-control-while/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-08-loop-control-while/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-08-loop-control-while/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-09-loop-patterns-mixed/' %} open{% endif %}>
+              <summary>Lesson 9</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-09-loop-patterns-mixed/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-09-loop-patterns-mixed/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-09-loop-patterns-mixed/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
+            <details class="lesson-group"{% if page.url contains '/lesson-10-loop-capstone-ai-safe/' %} open{% endif %}>
+              <summary>Lesson 10</summary>
+              <div class="lesson-links">
+                <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/student-worksheet.html' | relative_url }}"{% if page.url == '/lesson-10-loop-capstone-ai-safe/student-worksheet.html' %} aria-current="page"{% endif %}>Worksheet</a>
+                <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/guided-tutorial.html' | relative_url }}"{% if page.url == '/lesson-10-loop-capstone-ai-safe/guided-tutorial.html' %} aria-current="page"{% endif %}>Guided Tutorial</a>
+                <a class="lesson-link" href="{{ '/lesson-10-loop-capstone-ai-safe/starter.py' | relative_url }}">Starter Code</a>
+              </div>
+            </details>
           </section>
         </nav>
       </aside>
