@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ site.description }}">
+    <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  </head>
+  <body>
+    <div class="site-shell">
+      <aside class="site-sidebar">
+        <a class="brand" href="{{ '/' | relative_url }}">
+          <span class="brand-kicker">Student Pack</span>
+          <strong>Python Crash Course</strong>
+        </a>
+
+        <nav class="site-nav" aria-label="Course navigation">
+          <section>
+            <h2>Start Here</h2>
+            <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Home</a>
+            <a href="{{ '/shared/student-cheat-sheet.html' | relative_url }}"{% if page.url == '/shared/student-cheat-sheet.html' %} aria-current="page"{% endif %}>Cheat Sheet</a>
+            <a href="{{ '/shared/gemini-prompting-quick-guide.html' | relative_url }}"{% if page.url == '/shared/gemini-prompting-quick-guide.html' %} aria-current="page"{% endif %}>Gemini Guide</a>
+          </section>
+
+          <section>
+            <h2>Lessons 1-6</h2>
+            <a href="{{ '/lesson-01-mission-control/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-01-mission-control/' %} aria-current="page"{% endif %}>Lesson 1</a>
+            <a href="{{ '/lesson-02-dialogue-engine/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-02-dialogue-engine/' %} aria-current="page"{% endif %}>Lesson 2</a>
+            <a href="{{ '/lesson-03-choices-consequences/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-03-choices-consequences/' %} aria-current="page"{% endif %}>Lesson 3</a>
+            <a href="{{ '/lesson-04-data-without-loops/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-04-data-without-loops/' %} aria-current="page"{% endif %}>Lesson 4</a>
+            <a href="{{ '/lesson-05-structured-logic-challenge/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-05-structured-logic-challenge/' %} aria-current="page"{% endif %}>Lesson 5</a>
+            <a href="{{ '/lesson-06-capstone-simulation/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-06-capstone-simulation/' %} aria-current="page"{% endif %}>Lesson 6</a>
+          </section>
+
+          <section>
+            <h2>Lessons 7-10</h2>
+            <a href="{{ '/lesson-07-loop-launch-for/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-07-loop-launch-for/' %} aria-current="page"{% endif %}>Lesson 7</a>
+            <a href="{{ '/lesson-08-loop-control-while/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-08-loop-control-while/' %} aria-current="page"{% endif %}>Lesson 8</a>
+            <a href="{{ '/lesson-09-loop-patterns-mixed/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-09-loop-patterns-mixed/' %} aria-current="page"{% endif %}>Lesson 9</a>
+            <a href="{{ '/lesson-10-loop-capstone-ai-safe/student-worksheet.html' | relative_url }}"{% if page.url contains '/lesson-10-loop-capstone-ai-safe/' %} aria-current="page"{% endif %}>Lesson 10</a>
+          </section>
+        </nav>
+      </aside>
+
+      <main class="site-main">
+        <header class="page-header">
+          <p class="page-eyebrow">Young-adult coding missions</p>
+          <p class="page-summary">Worksheets, tutorials, starter files, and shared guides for the student-facing course.</p>
+        </header>
+
+        <article class="page-card markdown-body">
+          {{ content }}
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
