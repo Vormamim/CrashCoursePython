@@ -10,9 +10,9 @@ You are the mission operator preparing one tribute profile before the event begi
 Your code represents how control systems store and update character data.
 
 ## Theory (What You Need to Know)
-- A variable is a named box that stores data.
-- Python data types used today: `int`, `float`, `str`, `bool`.
-- Reassignment updates a variable when something changes.
+- A **variable** is a named box that stores **data**. The box is one of billions of boxes in a computers memory.
+- Python **data types** used in this lesson are: `int`, `float`, `str`, `bool`.
+- **Reassignment** updates a variable when something changes. Variables can be re-assigned new values, for example `num=10` can be changed to `num=100`. The program keeps track of variables. Once re-assigned, the old value is over-written.
 
 ## Metalanguage (Key Terms + Examples)
 - `variable`: A named value your code can use later.
