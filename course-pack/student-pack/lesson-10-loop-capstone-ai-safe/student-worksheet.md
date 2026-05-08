@@ -1,9 +1,7 @@
 # Student Worksheet: Lesson 10 Loop Capstone + AI Safety
 
-## YA Theme Context
-This capstone is inspired by multiverse YA missions where control teams run repeated portal cycles.
-You are coding the command console that decides whether each cycle opens or holds.
-Your loops model repeated operations and safety checks in a high-stakes world.
+## Instructions
+Follow the worksheet steps in order and complete each task using the required variables, inputs, and outputs.
 
 ## Theory
 - `for` is best for fixed repeats.

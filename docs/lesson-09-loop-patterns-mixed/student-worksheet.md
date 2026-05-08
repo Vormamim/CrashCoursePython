@@ -4,10 +4,8 @@ layout: default
 
 # Student Worksheet: Lesson 9 Loop Patterns (Mixed)
 
-## YA Theme Context
-This lesson is inspired by YA academy trials where many recruits are processed in sequence.
-You are coding the trial queue system that validates scores and tracks pass counts.
-Your loops model repeated trainee processing and repeated input correction.
+## Instructions
+Follow the worksheet steps in order and complete each task using the required variables, inputs, and outputs.
 
 ## Theory
 - Use `for` when repeats are known.

@@ -1,9 +1,7 @@
 # Student Worksheet: Lesson 8 Loop Control (`while`)
 
-## YA Theme Context
-This lesson is inspired by YA launch scenes where countdown systems must be exact.
-You are coding the countdown terminal that controls the final launch moment.
-Your loop simulates time steps until the launch condition is reached.
+## Instructions
+Follow the worksheet steps in order and complete each task using the required variables, inputs, and outputs.
 
 ## Theory
 - `while` repeats while a condition is true.

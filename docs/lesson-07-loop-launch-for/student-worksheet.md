@@ -4,10 +4,8 @@ layout: default
 
 # Student Worksheet: Lesson 7 Loop Launch (`for`)
 
-## YA Theme Context
-This lesson is inspired by maze-run YA missions where checkpoint systems monitor progress.
-You are coding the scanner that checks each checkpoint in order.
-Your loop represents repeated patrol checks during the run.
+## Instructions
+Follow the worksheet steps in order and complete each task using the required variables, inputs, and outputs.
 
 ## Theory
 - A loop repeats code.
