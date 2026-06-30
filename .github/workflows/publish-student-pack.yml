@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - course-pack/student-pack/**
-      - _config.yml
-      - scripts/build_student_pages.sh
+      - .pages-build/**
       - .github/workflows/publish-student-pack.yml
   workflow_dispatch:
 
@@ -29,9 +27,6 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-
-      - name: Build student site source
-        run: bash scripts/build_student_pages.sh
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
