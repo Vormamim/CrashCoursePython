@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive IDE – Python Crash Course</title>
+
+  <!--
+    Self-contained IDE page – intentionally NOT using the site Jekyll layout
+    so it can fill the full viewport without the sidebar/header chrome.
+    Bootstrap 5 "Darkly" theme from Bootswatch gives a dark, terminal-friendly look.
+  -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="ide.css">
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       3-ROW LAYOUT
+       Row 1 (auto)  – course progression navigation
+       Row 2 (1fr)   – IDE editor + toolbar
+       Row 3 (32vh)  – output / console
+  ═══════════════════════════════════════════════════════ -->
+  <div id="ide-app">
+
+    <!-- ── Row 1: Lesson navigation ─────────────────────── -->
+    <div id="row-nav" role="navigation" aria-label="Lesson navigation">
+      <!-- Lesson buttons rendered by ide.js renderNav() -->
+    </div>
+
+    <!-- ── Row 2: Editor ────────────────────────────────── -->
+    <div id="row-editor">
+
+      <div id="editor-toolbar">
+
+        <!-- RUN: execute current editor contents via Pyodide -->
+        <button id="btn-run" class="btn btn-sm btn-success" disabled title="Run code (Ctrl+Enter)">
+          ▶ Run
+        </button>
+
+        <!-- RESET: restore lesson starter code and clear output -->
+        <button id="btn-reset" class="btn btn-sm btn-secondary" title="Reset to starter code">
+          ↺ Reset
+        </button>
+
+        <!-- COPY: copy editor text to clipboard -->
+        <button id="btn-copy" class="btn btn-sm btn-secondary" title="Copy code to clipboard">
+          ⎘ Copy
+        </button>
+
+        <!-- LOAD: open a local .py file into the editor -->
+        <button id="btn-load" class="btn btn-sm btn-secondary" title="Load a .py file">
+          ↑ Load
+        </button>
+        <!-- Hidden file input triggered by btn-load -->
+        <input type="file" id="file-input" accept=".py" style="display:none" aria-hidden="true">
+
+        <!-- SAVE: download current editor text as a .py file -->
+        <button id="btn-save" class="btn btn-sm btn-secondary" title="Save code as .py">
+          ↓ Save
+        </button>
+
+        <!-- Runtime status indicator (loading / ready / running) -->
+        <span id="status-msg">Loading Python runtime…</span>
+
+        <!-- Link back to course home -->
+        <a href="../" class="btn btn-sm btn-outline-light ms-auto" title="Back to course home">
+          ← Course
+        </a>
+      </div>
+
+      <!-- Code editor textarea -->
+      <textarea
+        id="editor"
+        spellcheck="false"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        aria-label="Python code editor"
+        placeholder="# Write your Python code here…"></textarea>
+    </div>
+
+    <!-- ── Row 3: Output console ─────────────────────────── -->
+    <div id="row-output">
+      <div id="output-toolbar">
+        <span>Output</span>
+        <button
+          class="btn btn-sm btn-outline-secondary py-0 ms-2"
+          onclick="document.getElementById('output').textContent=''"
+          title="Clear output">
+          ✕ Clear
+        </button>
+      </div>
+      <!-- Terminal-style output – populated by ide.js -->
+      <pre id="output" aria-live="polite" aria-label="Program output"></pre>
+    </div>
+
+  </div><!-- #ide-app -->
+
+  <!-- Pyodide in-browser Python runtime (loaded from CDN) -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js" crossorigin="anonymous"></script>
+
+  <!-- Lesson definitions (must load before ide.js) -->
+  <script src="lessons.js"></script>
+
+  <!-- IDE logic -->
+  <script src="ide.js"></script>
+
+  <!-- Ctrl/Cmd+Enter shortcut to run code -->
+  <script>
+    document.addEventListener("keydown", function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("btn-run").click();
+      }
+    });
+  </script>
+
+</body>
+</html>
