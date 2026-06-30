@@ -13,6 +13,13 @@ const btnSave   = document.getElementById("btn-save");
 const fileInput = document.getElementById("file-input");
 const statusMsg = document.getElementById("status-msg");
 const navRow    = document.getElementById("row-nav");
+const lessonModal = document.getElementById("lesson-modal");
+const lessonModalTitle = document.getElementById("lesson-modal-title");
+const lessonModalGoal = document.getElementById("lesson-modal-goal");
+const lessonModalStory = document.getElementById("lesson-modal-story");
+const lessonModalTags = document.getElementById("lesson-modal-tags");
+const btnModalClose = document.getElementById("btn-modal-close");
+const btnModalStart = document.getElementById("btn-modal-start");
 
 // ── Runtime state ─────────────────────────────────────────
 let pyodide = null;          // set once Pyodide is loaded
@@ -54,6 +61,58 @@ function setLessonStatus(id, status) {
 
 function getLessonStatus(id) {
   return getProgress()[id] || "not-started";
+}
+
+function getRequestedLessonId() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get("lesson");
+  if (!requested) return null;
+  return LESSONS.some(lesson => lesson.id === requested) ? requested : null;
+}
+
+function getLessonTags(lesson) {
+  const summaryTags = {
+    "lesson-01": ["variables", "types", "output"],
+    "lesson-02": ["input", "conversion", "math"],
+    "lesson-03": ["branching", "logic", "nested if"],
+    "lesson-04": ["lists", "tuples", "indexes"],
+    "lesson-05": ["debugging", "trace tables", "conditions"],
+    "lesson-06": ["planning", "testing", "reflection"],
+    "lesson-07": ["for loops", "range()", "patterns"],
+    "lesson-08": ["while loops", "counters", "safety"],
+    "lesson-09": ["validation", "mixed loops", "testing"],
+    "lesson-10": ["capstone", "AI safety", "summaries"]
+  };
+
+  return summaryTags[lesson.id] || [];
+}
+
+function renderLessonModal(lesson) {
+  lessonModalTitle.textContent = lesson.title;
+  lessonModalGoal.textContent = lesson.goal;
+  lessonModalStory.textContent = lesson.story;
+  lessonModalTags.innerHTML = "";
+
+  getLessonTags(lesson).forEach(tag => {
+    const span = document.createElement("span");
+    span.className = "tag";
+    span.textContent = tag;
+    lessonModalTags.appendChild(span);
+  });
+}
+
+function openLessonModal(lesson) {
+  if (!lessonModal || !lesson) return;
+  renderLessonModal(lesson);
+  lessonModal.classList.add("is-open");
+  lessonModal.setAttribute("aria-hidden", "false");
+}
+
+function closeLessonModal() {
+  if (!lessonModal) return;
+  lessonModal.classList.remove("is-open");
+  lessonModal.setAttribute("aria-hidden", "true");
+  editor.focus();
 }
 
 // ── Lesson navigation ─────────────────────────────────────
@@ -105,6 +164,7 @@ function selectLesson(id) {
 
   clearOutput();
   renderNav();
+  openLessonModal(lesson);
 }
 
 // ── Track edits → persist code + mark in-progress ─────────
@@ -231,6 +291,23 @@ btnSave.addEventListener("click", () => {
   URL.revokeObjectURL(url);
 });
 
+// ── Lesson modal controls ────────────────────────────────
+if (btnModalClose) {
+  btnModalClose.addEventListener("click", closeLessonModal);
+}
+
+if (btnModalStart) {
+  btnModalStart.addEventListener("click", closeLessonModal);
+}
+
+if (lessonModal) {
+  lessonModal.addEventListener("click", event => {
+    if (event.target === lessonModal) {
+      closeLessonModal();
+    }
+  });
+}
+
 // ── Pyodide initialisation ────────────────────────────────
 async function initPyodide() {
   statusMsg.textContent = "Loading Python runtime…";
@@ -258,7 +335,7 @@ async function initPyodide() {
 // ── Entry point ───────────────────────────────────────────
 (function init() {
   if (LESSONS.length > 0) {
-    selectLesson(LESSONS[0].id);
+    selectLesson(getRequestedLessonId() || LESSONS[0].id);
   }
   initPyodide();
 }());

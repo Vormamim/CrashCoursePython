@@ -1,55 +1,22 @@
-# Python Crash Course Student Pack
+# Python Crash Course
 
-This site publishes the student-facing materials from the course pack.
+A classroom-safe Python course built around mission control, escape terminals, faction sorting, scoreboards, and looping simulations.
 
-## How To Use This Site
-1. Open the lesson worksheet.
-2. Work through the guided tutorial.
-3. Try the code in the **[Interactive IDE](interactive/)** — run Python right in your browser!
-4. Use the shared cheat sheet when needed.
+## Lesson journey
 
-## Interactive IDE
+- [Lesson 1 – Mission Control](interactive/?lesson=lesson-01)
+- [Lesson 2 – Dialogue Engine](interactive/?lesson=lesson-02)
+- [Lesson 3 – Choices and Consequences](interactive/?lesson=lesson-03)
+- [Lesson 4 – Data Without Loops](interactive/?lesson=lesson-04)
+- [Lesson 5 – Structured Logic Challenge](interactive/?lesson=lesson-05)
+- [Lesson 6 – Capstone Simulation](interactive/?lesson=lesson-06)
+- [Lesson 7 – Loop Launch](interactive/?lesson=lesson-07)
+- [Lesson 8 – While Loop Control](interactive/?lesson=lesson-08)
+- [Lesson 9 – Loop Patterns Mixed](interactive/?lesson=lesson-09)
+- [Lesson 10 – Loop Capstone + AI Safety](interactive/?lesson=lesson-10)
 
-**[▶ Open the Interactive IDE](interactive/)** — write and run Python code in your browser, no install needed.
+## Launch points
 
-## Lessons 1-6: Core Python Without Loops
-- [Lesson 1: Mission Control Worksheet](lesson-01-mission-control/student-worksheet.html)
-- [Lesson 1: Guided Tutorial](lesson-01-mission-control/guided-tutorial.html)
-- [Lesson 1: Starter Code](lesson-01-mission-control/starter.py)
-- [Lesson 2: Dialogue Engine Worksheet](lesson-02-dialogue-engine/student-worksheet.html)
-- [Lesson 2: Guided Tutorial](lesson-02-dialogue-engine/guided-tutorial.html)
-- [Lesson 2: Starter Code](lesson-02-dialogue-engine/starter.py)
-- [Lesson 3: Choices and Consequences Worksheet](lesson-03-choices-consequences/student-worksheet.html)
-- [Lesson 3: Guided Tutorial](lesson-03-choices-consequences/guided-tutorial.html)
-- [Lesson 3: Starter Code](lesson-03-choices-consequences/starter.py)
-- [Lesson 4: Data Without Loops Worksheet](lesson-04-data-without-loops/student-worksheet.html)
-- [Lesson 4: Guided Tutorial](lesson-04-data-without-loops/guided-tutorial.html)
-- [Lesson 4: Starter Code](lesson-04-data-without-loops/starter.py)
-- [Lesson 5: Structured Logic Challenge Worksheet](lesson-05-structured-logic-challenge/student-worksheet.html)
-- [Lesson 5: Guided Tutorial](lesson-05-structured-logic-challenge/guided-tutorial.html)
-- [Lesson 5: Starter Code](lesson-05-structured-logic-challenge/starter.py)
-- [Lesson 6: Capstone Simulation Worksheet](lesson-06-capstone-simulation/student-worksheet.html)
-- [Lesson 6: Guided Tutorial](lesson-06-capstone-simulation/guided-tutorial.html)
-- [Lesson 6: Starter Code](lesson-06-capstone-simulation/starter.py)
-
-## Lessons 7-10: Loops And Gemini Prompting
-- [Lesson 7: Loop Launch Worksheet](lesson-07-loop-launch-for/student-worksheet.html)
-- [Lesson 7: Guided Tutorial](lesson-07-loop-launch-for/guided-tutorial.html)
-- [Lesson 7: Starter Code](lesson-07-loop-launch-for/starter.py)
-- [Lesson 8: While Loop Control Worksheet](lesson-08-loop-control-while/student-worksheet.html)
-- [Lesson 8: Guided Tutorial](lesson-08-loop-control-while/guided-tutorial.html)
-- [Lesson 8: Starter Code](lesson-08-loop-control-while/starter.py)
-- [Lesson 9: Mixed Loop Patterns Worksheet](lesson-09-loop-patterns-mixed/student-worksheet.html)
-- [Lesson 9: Guided Tutorial](lesson-09-loop-patterns-mixed/guided-tutorial.html)
-- [Lesson 9: Starter Code](lesson-09-loop-patterns-mixed/starter.py)
-- [Lesson 10: Loop Capstone Worksheet](lesson-10-loop-capstone-ai-safe/student-worksheet.html)
-- [Lesson 10: Guided Tutorial](lesson-10-loop-capstone-ai-safe/guided-tutorial.html)
-- [Lesson 10: Starter Code](lesson-10-loop-capstone-ai-safe/starter.py)
-
-## Shared Student Resources
-- [Student Cheat Sheet](shared/student-cheat-sheet.html)
-- [Student Coding Jargon Glossary](shared/jargon-glossary.html)
-- [Gemini Prompting Quick Guide](shared/gemini-prompting-quick-guide.html)
-
-## Teacher-Only Resources
-Teacher materials are intentionally not published on this site.
+- [Interactive IDE](interactive/)
+- [Student cheat sheet](shared/student-cheat-sheet.html)
+- [Gemini quick guide](shared/gemini-prompting-quick-guide.html)

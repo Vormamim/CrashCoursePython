@@ -100,6 +100,28 @@
 
   </div><!-- #ide-app -->
 
+  <div id="lesson-modal" class="lesson-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lesson-modal-title">
+    <div class="lesson-modal__panel">
+      <div class="lesson-modal__top">
+        <div>
+          <p class="lesson-modal__kicker">Lesson mission briefing</p>
+          <h2 id="lesson-modal-title" class="lesson-modal__title">Lesson title</h2>
+        </div>
+        <button id="btn-modal-close" type="button" class="btn btn-sm btn-outline-light lesson-modal__close">Close</button>
+      </div>
+      <div class="lesson-modal__body">
+        <p class="lesson-modal__label">Goal</p>
+        <p id="lesson-modal-goal" class="lesson-modal__text"></p>
+        <p class="lesson-modal__label">Story background</p>
+        <p id="lesson-modal-story" class="lesson-modal__text"></p>
+        <div id="lesson-modal-tags" class="lesson-modal__tags"></div>
+        <div class="lesson-modal__footer">
+          <button id="btn-modal-start" type="button" class="btn btn-sm btn-success">Start coding</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Pyodide in-browser Python runtime (loaded from CDN) -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js" crossorigin="anonymous"></script>
 

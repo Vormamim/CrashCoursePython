@@ -29,6 +29,93 @@ html, body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* ── Lesson intro modal ───────────────────────────────── */
+.lesson-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(4, 5, 12, 0.72);
+  backdrop-filter: blur(12px);
+  z-index: 30;
+}
+
+.lesson-modal.is-open {
+  display: flex;
+}
+
+.lesson-modal__panel {
+  width: min(720px, 100%);
+  max-height: min(85vh, 860px);
+  overflow: auto;
+  border: 1px solid rgba(255, 79, 216, 0.35);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(18, 18, 38, 0.98), rgba(8, 9, 20, 0.98));
+  box-shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
+}
+
+.lesson-modal__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1.1rem 1.2rem 0.85rem;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.lesson-modal__kicker {
+  margin: 0 0 0.35rem;
+  color: #9dfcff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.lesson-modal__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2.15rem);
+  line-height: 1.12;
+}
+
+.lesson-modal__close {
+  flex: 0 0 auto;
+}
+
+.lesson-modal__body {
+  padding: 1.1rem 1.2rem 1.25rem;
+}
+
+.lesson-modal__label {
+  margin: 0 0 0.35rem;
+  color: #ff8de9;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.lesson-modal__text {
+  margin: 0 0 1rem;
+  color: #e7e0ff;
+}
+
+.lesson-modal__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.lesson-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.15rem;
+}
+
 /* Lesson button status indicators */
 .lesson-nav-btn {
   font-size: 0.78rem;
@@ -140,6 +227,16 @@ html, body {
 @media (max-width: 600px) {
   #ide-app {
     grid-template-rows: auto 1fr 28vh;
+  }
+
+  .lesson-modal {
+    padding: 0.75rem;
+  }
+
+  .lesson-modal__top,
+  .lesson-modal__body {
+    padding-left: 0.95rem;
+    padding-right: 0.95rem;
   }
 
   #editor {
