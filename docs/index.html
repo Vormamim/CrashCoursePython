@@ -23,8 +23,8 @@
               <p class="hero-copy">Start with simple console output, then move through choices, data, and loops while following a story of mission control, escape terminals, faction sorting, and multiverse portals. No "hello world" included here.</p>
               <div class="hero-actions">
                 <a class="button button-primary" href="../course-pack/student-pack/interactive/?lesson=lesson-01">▶ Open the Interactive IDE</a>
-                <a class="button button-secondary" href="../course-pack/student-pack/shared/student-cheat-sheet.html">Open the Cheat Sheet</a>
-                <a class="button button-secondary" href="../course-pack/student-pack/shared/gemini-prompting-quick-guide.html">Open Gemini Prompt Cheat Sheet</a>
+                <a class="button button-secondary" href="../course-pack/student-pack/shared/student-cheat-sheet.html" data-sheet-modal-trigger data-sheet-title="Python Student Cheat Sheet">Open the Cheat Sheet</a>
+                <a class="button button-secondary" href="../course-pack/student-pack/shared/gemini-prompting-quick-guide.html" data-sheet-modal-trigger data-sheet-title="Gemini Prompt Cheat Sheet">Open Gemini Prompt Cheat Sheet</a>
               </div>
             </div>
             <div class="hero-panel">
@@ -47,93 +47,6 @@
               <div class="feature-card"><h3>Visible progression</h3><p>Learn how to move from variables and output to branching, data structures, and loops in a clear, ordered pathway.</p></div>
               <div class="feature-card"><h3>Independent practice</h3><p>Each lesson includes a mission goal and starter code!</p></div>
               <div class="feature-card"><h3>Responsible AI use</h3><p>Later lessons teach students how to use Gemini for hints, reasoning, and debugging without outsourcing the whole solution.</p></div>
-            </div>
-          </section>
-
-          <section class="section-block">
-            <div class="section-head">
-              <h2>Gemini Prompt Cheat Sheet (Beginner Python)</h2>
-              <p>Use these prompt templates in later lessons. Ask for help with thinking, debugging, and explaining — not for full solutions.</p>
-            </div>
-
-            <div class="feature-grid">
-              <div class="feature-card">
-                <h3>1) Understand the task first</h3>
-                <p><strong>Use when:</strong> You are not sure what the problem is asking.</p>
-                <pre><code>I am a beginner Python student.
-Explain this task in simple words.
-Then list:
-1) what inputs I have,
-2) what output I should produce,
-3) the steps I should try.
-Do not give full code yet.</code></pre>
-              </div>
-
-              <div class="feature-card">
-                <h3>2) Plan before coding</h3>
-                <p><strong>Use when:</strong> You want a clear step-by-step approach.</p>
-                <pre><code>Help me make a Python plan for this problem:
-[paste problem]
-
-Use beginner concepts only from this course:
-- variables
-- input + conversion
-- if / elif / else
-- lists / tuples
-- loops (if lesson 7+)
-
-Give pseudocode, not full code.</code></pre>
-              </div>
-
-              <div class="feature-card">
-                <h3>3) Debug an error</h3>
-                <p><strong>Use when:</strong> Your code crashes or gives the wrong output.</p>
-                <pre><code>I need debugging help.
-Here is my code:
-[paste code]
-
-Here is the error/output:
-[paste error]
-
-Please:
-1) explain the bug simply,
-2) point to the exact line,
-3) suggest the smallest fix,
-4) give one test case to confirm.</code></pre>
-              </div>
-
-              <div class="feature-card">
-                <h3>4) Explain code line by line</h3>
-                <p><strong>Use when:</strong> You copied or wrote code and want to understand it.</p>
-                <pre><code>Explain this Python code line by line for a beginner.
-For each line, tell me:
-- what it does
-- why it matters
-- one common mistake
-
-Code:
-[paste code]</code></pre>
-              </div>
-
-              <div class="feature-card">
-                <h3>5) Improve output formatting</h3>
-                <p><strong>Use when:</strong> Your print output is messy or unclear.</p>
-                <pre><code>Help me improve the print output in this Python code.
-Keep the same logic, only improve readability.
-Use beginner-friendly print statements.
-
-Code:
-[paste code]</code></pre>
-              </div>
-
-              <div class="feature-card">
-                <h3>6) Ask for hints, not answers</h3>
-                <p><strong>Use when:</strong> You want to learn without outsourcing the solution.</p>
-                <pre><code>Do NOT give me the final solution.
-Give me 3 hints from easy to harder.
-After the hints, ask me one checkpoint question
-to test if I understand before I continue coding.</code></pre>
-              </div>
             </div>
           </section>
 
@@ -163,13 +76,73 @@ to test if I understand before I continue coding.</code></pre>
             </div>
             <div class="link-grid">
               <div class="link-tile"><strong>Interactive IDE</strong><a href="../course-pack/student-pack/interactive/">Open in browser</a></div>
-              <div class="link-tile"><strong>Student cheat sheet</strong><a href="../course-pack/student-pack/shared/student-cheat-sheet.html">Open resource</a></div>
-              <div class="link-tile"><strong>Gemini quick guide</strong><a href="../course-pack/student-pack/shared/gemini-prompting-quick-guide.html">Open guide</a></div>
+              <div class="link-tile"><strong>Student cheat sheet</strong><a href="../course-pack/student-pack/shared/student-cheat-sheet.html" data-sheet-modal-trigger data-sheet-title="Python Student Cheat Sheet">Open resource</a></div>
+              <div class="link-tile"><strong>Gemini quick guide</strong><a href="../course-pack/student-pack/shared/gemini-prompting-quick-guide.html" data-sheet-modal-trigger data-sheet-title="Gemini Prompt Cheat Sheet">Open guide</a></div>
               <div class="link-tile"><strong>Course pack</strong><a href="../course-pack/student-pack/">Browse lessons</a></div>
             </div>
           </section>
         </article>
       </main>
     </div>
+
+    <div id="sheet-modal" class="sheet-modal" hidden aria-hidden="true">
+      <div class="sheet-modal__backdrop" data-sheet-close></div>
+      <section class="sheet-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-modal-title">
+        <header class="sheet-modal__header">
+          <h2 id="sheet-modal-title" class="sheet-modal__title">Cheat Sheet</h2>
+          <button type="button" class="sheet-modal__close" data-sheet-close>Close</button>
+        </header>
+        <iframe id="sheet-modal-frame" class="sheet-modal__frame" title="Cheat sheet content" src="about:blank" loading="lazy"></iframe>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        const modal = document.getElementById("sheet-modal");
+        const frame = document.getElementById("sheet-modal-frame");
+        const title = document.getElementById("sheet-modal-title");
+        const triggers = document.querySelectorAll("[data-sheet-modal-trigger]");
+        const closers = document.querySelectorAll("[data-sheet-close]");
+        let lastTrigger = null;
+
+        function openModal(trigger) {
+          const url = trigger.getAttribute("href");
+          if (!url) return;
+          lastTrigger = trigger;
+          frame.src = url;
+          title.textContent = trigger.getAttribute("data-sheet-title") || trigger.textContent.trim() || "Cheat Sheet";
+          modal.hidden = false;
+          modal.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          modal.hidden = true;
+          modal.setAttribute("aria-hidden", "true");
+          frame.src = "about:blank";
+          document.body.style.overflow = "";
+          if (lastTrigger) {
+            lastTrigger.focus();
+          }
+        }
+
+        triggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            openModal(trigger);
+          });
+        });
+
+        closers.forEach(function (closer) {
+          closer.addEventListener("click", closeModal);
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

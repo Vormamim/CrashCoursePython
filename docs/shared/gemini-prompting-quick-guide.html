@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gemini Prompt Cheat Sheet | Python Crash Course</title>
+    <meta name="description" content="Beginner-safe Gemini prompt templates for Python lessons with copy-ready examples.">
+    <link rel="stylesheet" href="../../course-pack/student-pack/assets/css/site.css">
+    <style>
+      .cheat-topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.75rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .cheat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+
+      .cheat-card {
+        border: 1px solid rgba(0, 229, 255, 0.18);
+        border-radius: 14px;
+        background: rgba(12, 12, 28, 0.84);
+        padding: 0.95rem;
+      }
+
+      .cheat-card h3 {
+        margin-top: 0;
+        margin-bottom: 0.35rem;
+      }
+
+      .cheat-card p {
+        margin: 0 0 0.65rem;
+        color: #d8d1ff;
+      }
+
+      .snippet-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .copy-btn {
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        background: rgba(255, 79, 216, 0.18);
+        color: #fff;
+        border-radius: 999px;
+        padding: 0.25rem 0.65rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="site-shell landing-shell">
+      <main class="site-main">
+        <header class="page-header">
+          <div class="cheat-topbar">
+            <a id="back-btn" class="button button-secondary" href="../index.html">← Back</a>
+            <a class="button button-secondary" href="../../course-pack/student-pack/interactive/?lesson=lesson-07">▶ IDE</a>
+          </div>
+          <p class="page-eyebrow">Quick reference</p>
+          <h1 class="hero-title">Gemini Prompt Cheat Sheet</h1>
+          <p class="page-summary">Use Gemini for hints, planning, and debugging. Do not ask for full assignment answers.</p>
+        </header>
+
+        <article class="page-card markdown-body">
+          <section class="cheat-grid">
+            <article class="cheat-card">
+              <h3>Understand the task first</h3>
+              <p>Use when the question is unclear and you need a plain-language breakdown.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-understand">Copy</button></div>
+              <pre><code id="prompt-understand">I am a beginner Python student.
+Explain this task in simple words.
+Then list:
+1) what inputs I have,
+2) what output I should produce,
+3) the steps I should try.
+Do not give full code yet.</code></pre>
+            </article>
+
+            <article class="cheat-card">
+              <h3>Plan before coding</h3>
+              <p>Use when you want a clear strategy before typing code.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-plan">Copy</button></div>
+              <pre><code id="prompt-plan">Help me make a Python plan for this problem:
+[paste problem]
+
+Use beginner concepts only from this course:
+- variables
+- input + conversion
+- if / elif / else
+- lists / tuples
+- loops (if lesson 7+)
+
+Give pseudocode, not full code.</code></pre>
+            </article>
+
+            <article class="cheat-card">
+              <h3>Debug an error</h3>
+              <p>Use when your code crashes or output is wrong.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-debug">Copy</button></div>
+              <pre><code id="prompt-debug">I need debugging help.
+Here is my code:
+[paste code]
+
+Here is the error/output:
+[paste error]
+
+Please:
+1) explain the bug simply,
+2) point to the exact line,
+3) suggest the smallest fix,
+4) give one test case to confirm.</code></pre>
+            </article>
+
+            <article class="cheat-card">
+              <h3>Explain code line by line</h3>
+              <p>Use when you want to understand code deeply.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-explain">Copy</button></div>
+              <pre><code id="prompt-explain">Explain this Python code line by line for a beginner.
+For each line, tell me:
+- what it does
+- why it matters
+- one common mistake
+
+Code:
+[paste code]</code></pre>
+            </article>
+
+            <article class="cheat-card">
+              <h3>Improve print output</h3>
+              <p>Use when your console output looks messy or unclear.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-output">Copy</button></div>
+              <pre><code id="prompt-output">Help me improve the print output in this Python code.
+Keep the same logic, only improve readability.
+Use beginner-friendly print statements.
+
+Code:
+[paste code]</code></pre>
+            </article>
+
+            <article class="cheat-card">
+              <h3>Hints only, no full answer</h3>
+              <p>Use when you want support while still doing your own work.</p>
+              <div class="snippet-head"><span>Prompt</span><button class="copy-btn" data-copy-target="prompt-hints">Copy</button></div>
+              <pre><code id="prompt-hints">Do NOT give me the final solution.
+Give me 3 hints from easy to harder.
+After the hints, ask me one checkpoint question
+to test if I understand before I continue coding.</code></pre>
+            </article>
+          </section>
+        </article>
+      </main>
+    </div>
+
+    <script>
+      document.getElementById("back-btn")?.addEventListener("click", function (event) {
+        if (window.history.length > 1) {
+          event.preventDefault();
+          window.history.back();
+        }
+      });
+
+      document.querySelectorAll(".copy-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const codeId = button.getAttribute("data-copy-target");
+          const code = document.getElementById(codeId);
+          if (!code) return;
+
+          try {
+            await navigator.clipboard.writeText(code.textContent);
+            const old = button.textContent;
+            button.textContent = "Copied";
+            setTimeout(function () {
+              button.textContent = old;
+            }, 1200);
+          } catch {
+            const range = document.createRange();
+            range.selectNodeContents(code);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

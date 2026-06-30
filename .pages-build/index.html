@@ -23,7 +23,8 @@
               <p class="hero-copy">Start with simple console output, then move through choices, data, and loops while following a story of mission control, escape terminals, faction sorting, and multiverse portals. No "hello world" included here.</p>
               <div class="hero-actions">
                 <a class="button button-primary" href="interactive/?lesson=lesson-01">▶ Open the Interactive IDE</a>
-                <a class="button button-secondary" href="shared/student-cheat-sheet.html">Open the Cheat Sheet</a>
+                <a class="button button-secondary" href="shared/student-cheat-sheet.html" data-sheet-modal-trigger data-sheet-title="Python Student Cheat Sheet">Open the Cheat Sheet</a>
+                <a class="button button-secondary" href="shared/gemini-prompting-quick-guide.html" data-sheet-modal-trigger data-sheet-title="Gemini Prompt Cheat Sheet">Open Gemini Prompt Cheat Sheet</a>
               </div>
             </div>
             <div class="hero-panel">
@@ -75,13 +76,73 @@
             </div>
             <div class="link-grid">
               <div class="link-tile"><strong>Interactive IDE</strong><a href="./interactive/">Open in browser</a></div>
-              <div class="link-tile"><strong>Student cheat sheet</strong><a href="shared/student-cheat-sheet.html">Open resource</a></div>
-              <div class="link-tile"><strong>Gemini quick guide</strong><a href="shared/gemini-prompting-quick-guide.html">Open guide</a></div>
+              <div class="link-tile"><strong>Student cheat sheet</strong><a href="shared/student-cheat-sheet.html" data-sheet-modal-trigger data-sheet-title="Python Student Cheat Sheet">Open resource</a></div>
+              <div class="link-tile"><strong>Gemini quick guide</strong><a href="shared/gemini-prompting-quick-guide.html" data-sheet-modal-trigger data-sheet-title="Gemini Prompt Cheat Sheet">Open guide</a></div>
               <div class="link-tile"><strong>Course pack</strong><a href="./">Browse lessons</a></div>
             </div>
           </section>
         </article>
       </main>
     </div>
+
+    <div id="sheet-modal" class="sheet-modal" hidden aria-hidden="true">
+      <div class="sheet-modal__backdrop" data-sheet-close></div>
+      <section class="sheet-modal__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-modal-title">
+        <header class="sheet-modal__header">
+          <h2 id="sheet-modal-title" class="sheet-modal__title">Cheat Sheet</h2>
+          <button type="button" class="sheet-modal__close" data-sheet-close>Close</button>
+        </header>
+        <iframe id="sheet-modal-frame" class="sheet-modal__frame" title="Cheat sheet content" src="about:blank" loading="lazy"></iframe>
+      </section>
+    </div>
+
+    <script>
+      (function () {
+        const modal = document.getElementById("sheet-modal");
+        const frame = document.getElementById("sheet-modal-frame");
+        const title = document.getElementById("sheet-modal-title");
+        const triggers = document.querySelectorAll("[data-sheet-modal-trigger]");
+        const closers = document.querySelectorAll("[data-sheet-close]");
+        let lastTrigger = null;
+
+        function openModal(trigger) {
+          const url = trigger.getAttribute("href");
+          if (!url) return;
+          lastTrigger = trigger;
+          frame.src = url;
+          title.textContent = trigger.getAttribute("data-sheet-title") || trigger.textContent.trim() || "Cheat Sheet";
+          modal.hidden = false;
+          modal.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          modal.hidden = true;
+          modal.setAttribute("aria-hidden", "true");
+          frame.src = "about:blank";
+          document.body.style.overflow = "";
+          if (lastTrigger) {
+            lastTrigger.focus();
+          }
+        }
+
+        triggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+            openModal(trigger);
+          });
+        });
+
+        closers.forEach(function (closer) {
+          closer.addEventListener("click", closeModal);
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && !modal.hidden) {
+            closeModal();
+          }
+        });
+      })();
+    </script>
   </body>
 </html>
