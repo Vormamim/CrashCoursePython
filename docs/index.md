@@ -1,6 +1,8 @@
 # Python Crash Course
 
-A classroom-safe Python course built around mission control, escape terminals, faction sorting, scoreboards, and looping simulations.
+Learn beginner Python by building game mechanics.
+
+Start with simple console output, then move through choices, data, and loops while following a story of mission control, escape terminals, faction sorting, and multiverse portals. No "hello world" included here.
 
 ## Lesson journey
 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Cheat Sheet | Python Crash Course</title>
+    <meta name="description" content="Quick Python cheat sheet with short theory blurbs and copy-ready code snippets.">
+    <link rel="stylesheet" href="../assets/css/site.css">
+    <style>
+      .cheat-topbar { display: flex; justify-content: space-between; gap: 0.75rem; align-items: center; margin-bottom: 1rem; }
+      .cheat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+      .cheat-card { border: 1px solid rgba(0, 229, 255, 0.18); border-radius: 14px; background: rgba(12, 12, 28, 0.84); padding: 0.95rem; }
+      .cheat-card h3 { margin-top: 0; margin-bottom: 0.35rem; }
+      .cheat-card p { margin: 0 0 0.65rem; color: #d8d1ff; }
+      .snippet-head { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; }
+      .copy-btn { border: 1px solid rgba(0, 229, 255, 0.3); background: rgba(255, 79, 216, 0.18); color: #fff; border-radius: 999px; padding: 0.25rem 0.65rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="site-shell landing-shell">
+      <main class="site-main">
+        <header class="page-header">
+          <div class="cheat-topbar">
+            <a id="back-btn" class="button button-secondary" href="../index.html">← Back</a>
+            <a class="button button-secondary" href="../interactive/?lesson=lesson-01">▶ IDE</a>
+          </div>
+          <p class="page-eyebrow">Quick reference</p>
+          <h1 class="hero-title">Python Student Cheat Sheet</h1>
+          <p class="page-summary">Very short theory + sample code. Use copy on any snippet and paste into the IDE.</p>
+        </header>
+
+        <article class="page-card markdown-body">
+          <section class="cheat-grid">
+            <article class="cheat-card"><h3>Variables</h3><p>Store data in named values so you can reuse and update it.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-variables">Copy</button></div><pre><code id="snip-variables">name = "Ari"
+score = 12
+score = score + 3
+print(name, score)</code></pre></article>
+            <article class="cheat-card"><h3>Input + conversion</h3><p>Use <code>input()</code> to collect text, then convert to numbers when needed.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-input">Copy</button></div><pre><code id="snip-input">age_text = input("Age: ")
+age = int(age_text)
+print(age + 1)</code></pre></article>
+            <article class="cheat-card"><h3>If / elif / else</h3><p>Branch your logic so code reacts to conditions.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-if">Copy</button></div><pre><code id="snip-if">power = 72
+if power >= 80:
+    print("Elite")
+elif power >= 60:
+    print("Ready")
+else:
+    print("Train")</code></pre></article>
+            <article class="cheat-card"><h3>Lists + index</h3><p>Lists hold ordered items. Use indexes to read or update positions.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-list">Copy</button></div><pre><code id="snip-list">teams = ["Falcon", "Wolf", "Stag"]
+teams[1] = "Raven"
+print(teams[0])
+print(len(teams))</code></pre></article>
+            <article class="cheat-card"><h3>For loop</h3><p>Repeat a known number of times.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-for">Copy</button></div><pre><code id="snip-for">for checkpoint in range(1, 6):
+    print("Checkpoint", checkpoint)</code></pre></article>
+            <article class="cheat-card"><h3>While loop</h3><p>Repeat while a condition is true. Always update the loop state.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-while">Copy</button></div><pre><code id="snip-while">countdown = 3
+while countdown > 0:
+    print(countdown)
+    countdown -= 1
+print("Launch")</code></pre></article>
+            <article class="cheat-card"><h3>Validation pattern</h3><p>Keep asking until input is valid.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-validate">Copy</button></div><pre><code id="snip-validate">score = int(input("Score 0-100: "))
+while score < 0 or score > 100:
+    score = int(input("Try again: "))
+print("Accepted", score)</code></pre></article>
+            <article class="cheat-card"><h3>Debug quick check</h3><p>Print key values to trace logic quickly.</p><div class="snippet-head"><span>Sample</span><button class="copy-btn" data-copy-target="snip-debug">Copy</button></div><pre><code id="snip-debug">power = 55
+risk = 100 - power
+print("power=", power)
+print("risk=", risk)</code></pre></article>
+          </section>
+        </article>
+      </main>
+    </div>
+
+    <script>
+      document.getElementById("back-btn")?.addEventListener("click", function (event) {
+        if (window.history.length > 1) {
+          event.preventDefault();
+          window.history.back();
+        }
+      });
+      document.querySelectorAll(".copy-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const codeId = button.getAttribute("data-copy-target");
+          const code = document.getElementById(codeId);
+          if (!code) return;
+          try {
+            await navigator.clipboard.writeText(code.textContent);
+            const old = button.textContent;
+            button.textContent = "Copied";
+            setTimeout(function () { button.textContent = old; }, 1200);
+          } catch {
+            const range = document.createRange();
+            range.selectNodeContents(code);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
