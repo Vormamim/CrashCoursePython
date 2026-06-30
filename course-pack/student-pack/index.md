@@ -5,8 +5,12 @@ This site publishes the student-facing materials from the course pack.
 ## How To Use This Site
 1. Open the lesson worksheet.
 2. Work through the guided tutorial.
-3. Open the starter file in Python.
+3. Try the code in the **[Interactive IDE](interactive/)** — run Python right in your browser!
 4. Use the shared cheat sheet when needed.
+
+## Interactive IDE
+
+**[▶ Open the Interactive IDE](interactive/)** — write and run Python code in your browser, no install needed.
 
 ## Lessons 1-6: Core Python Without Loops
 - [Lesson 1: Mission Control Worksheet](lesson-01-mission-control/student-worksheet.html)

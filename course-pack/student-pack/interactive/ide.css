@@ -1,0 +1,157 @@
+/* ide.css – layout and terminal styling for the interactive IDE */
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* ── 3-row viewport grid ────────────────────────────────── */
+#ide-app {
+  display: grid;
+  grid-template-rows: auto 1fr 32vh;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Row 1: Lesson navigation ───────────────────────────── */
+#row-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  overflow-y: auto;
+  /* Bootstrap Darkly border colour */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Lesson button status indicators */
+.lesson-nav-btn {
+  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.lesson-nav-btn.active {
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Status legend label */
+.nav-legend {
+  margin-left: auto;
+  font-size: 0.72rem;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* ── Row 2: Editor ──────────────────────────────────────── */
+#row-editor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0; /* required for flex children with overflow */
+}
+
+#editor-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#status-msg {
+  margin-left: auto;
+  font-size: 0.78rem;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+#editor {
+  flex: 1;
+  resize: none;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  outline: none;
+  width: 100%;
+  /* Inherit Darkly background/text */
+  background-color: #1a1a2e;
+  color: #e8e8e8;
+  tab-size: 4;
+}
+
+/* ── Row 3: Output console ──────────────────────────────── */
+#row-output {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+#output-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#output {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background-color: #111;
+  color: #d4d4d4;
+}
+
+/* Normal stdout – default terminal colour */
+.out-stdout { color: #d4d4d4; }
+
+/* Errors and tracebacks – red */
+.out-error  { color: #ff6b6b; }
+
+/* Info/empty messages – muted */
+.out-info   { color: #888; font-style: italic; }
+
+/* ── Responsive adjustments ─────────────────────────────── */
+@media (max-width: 600px) {
+  #ide-app {
+    grid-template-rows: auto 1fr 28vh;
+  }
+
+  #editor {
+    font-size: 0.82rem;
+  }
+
+  #output {
+    font-size: 0.78rem;
+  }
+
+  .lesson-nav-btn {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.45rem;
+  }
+}
