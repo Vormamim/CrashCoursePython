@@ -24,6 +24,7 @@
               <div class="hero-actions">
                 <a class="button button-primary" href="../course-pack/student-pack/interactive/?lesson=lesson-01">▶ Open the Interactive IDE</a>
                 <a class="button button-secondary" href="../course-pack/student-pack/shared/student-cheat-sheet.html">Open the Cheat Sheet</a>
+                <a class="button button-secondary" href="../course-pack/student-pack/shared/gemini-prompting-quick-guide.html">Open Gemini Prompt Cheat Sheet</a>
               </div>
             </div>
             <div class="hero-panel">
@@ -51,20 +52,107 @@
 
           <section class="section-block">
             <div class="section-head">
+              <h2>Gemini Prompt Cheat Sheet (Beginner Python)</h2>
+              <p>Use these prompt templates in later lessons. Ask for help with thinking, debugging, and explaining — not for full solutions.</p>
+            </div>
+
+            <div class="feature-grid">
+              <div class="feature-card">
+                <h3>1) Understand the task first</h3>
+                <p><strong>Use when:</strong> You are not sure what the problem is asking.</p>
+                <pre><code>I am a beginner Python student.
+Explain this task in simple words.
+Then list:
+1) what inputs I have,
+2) what output I should produce,
+3) the steps I should try.
+Do not give full code yet.</code></pre>
+              </div>
+
+              <div class="feature-card">
+                <h3>2) Plan before coding</h3>
+                <p><strong>Use when:</strong> You want a clear step-by-step approach.</p>
+                <pre><code>Help me make a Python plan for this problem:
+[paste problem]
+
+Use beginner concepts only from this course:
+- variables
+- input + conversion
+- if / elif / else
+- lists / tuples
+- loops (if lesson 7+)
+
+Give pseudocode, not full code.</code></pre>
+              </div>
+
+              <div class="feature-card">
+                <h3>3) Debug an error</h3>
+                <p><strong>Use when:</strong> Your code crashes or gives the wrong output.</p>
+                <pre><code>I need debugging help.
+Here is my code:
+[paste code]
+
+Here is the error/output:
+[paste error]
+
+Please:
+1) explain the bug simply,
+2) point to the exact line,
+3) suggest the smallest fix,
+4) give one test case to confirm.</code></pre>
+              </div>
+
+              <div class="feature-card">
+                <h3>4) Explain code line by line</h3>
+                <p><strong>Use when:</strong> You copied or wrote code and want to understand it.</p>
+                <pre><code>Explain this Python code line by line for a beginner.
+For each line, tell me:
+- what it does
+- why it matters
+- one common mistake
+
+Code:
+[paste code]</code></pre>
+              </div>
+
+              <div class="feature-card">
+                <h3>5) Improve output formatting</h3>
+                <p><strong>Use when:</strong> Your print output is messy or unclear.</p>
+                <pre><code>Help me improve the print output in this Python code.
+Keep the same logic, only improve readability.
+Use beginner-friendly print statements.
+
+Code:
+[paste code]</code></pre>
+              </div>
+
+              <div class="feature-card">
+                <h3>6) Ask for hints, not answers</h3>
+                <p><strong>Use when:</strong> You want to learn without outsourcing the solution.</p>
+                <pre><code>Do NOT give me the final solution.
+Give me 3 hints from easy to harder.
+After the hints, ask me one checkpoint question
+to test if I understand before I continue coding.</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-head">
               <h2>Lesson journey</h2>
               <p>Open any lesson in the IDE to see its goal and story background before coding starts.</p>
             </div>
             <div class="journey-grid">
-              <article class="journey-card"><span class="journey-badge">1</span><h3>Mission Control</h3><p class="story">Create a tribute profile console and practise variables, types, reassignment, and printed output.</p><div class="journey-tags"><span class="tag">variables</span><span class="tag">types</span><span class="tag">output</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-01">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">2</span><h3>Dialogue Engine</h3><p class="story">Unlock a gate using two clues while learning input, conversion, arithmetic, and formatted decisions.</p><div class="journey-tags"><span class="tag">input</span><span class="tag">conversion</span><span class="tag">math</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-02">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">3</span><h3>Choices and Consequences</h3><p class="story">Sort a traveller into a faction with if, elif, else, comparison logic, and one nested elite branch.</p><div class="journey-tags"><span class="tag">branching</span><span class="tag">logic</span><span class="tag">nested if</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-03">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">4</span><h3>Data Without Loops</h3><p class="story">Manage house records with lists, tuples, indexes, and a points bonus applied by position.</p><div class="journey-tags"><span class="tag">lists</span><span class="tag">tuples</span><span class="tag">indexes</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-04">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">5</span><h3>Structured Logic Challenge</h3><p class="story">Combine input, arithmetic, list data, and conditions to build a full portal checkpoint system.</p><div class="journey-tags"><span class="tag">debugging</span><span class="tag">trace tables</span><span class="tag">edge cases</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-05">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">6</span><h3>Capstone Simulation</h3><p class="story">Choose a scenario and assemble a complete mini-simulator that proves you can connect the first half of the course.</p><div class="journey-tags"><span class="tag">planning</span><span class="tag">testing</span><span class="tag">reflection</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-06">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">7</span><h3>Loop Launch</h3><p class="story">Introduce for loops by scanning checkpoints and learning how repetition can be controlled and predicted.</p><div class="journey-tags"><span class="tag">for loops</span><span class="tag">range()</span><span class="tag">Gemini prompts</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-07">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">8</span><h3>While Loop Control</h3><p class="story">Use a countdown lock to practise safe while loops, counters, and stopping conditions.</p><div class="journey-tags"><span class="tag">while loops</span><span class="tag">counters</span><span class="tag">safety</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-08">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">9</span><h3>Loop Patterns Mixed</h3><p class="story">Combine for and while to validate input, process a trainee queue, and decide when each loop type is best.</p><div class="journey-tags"><span class="tag">validation</span><span class="tag">mixed loops</span><span class="tag">testing</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-09">Open in IDE</a></div></article>
-              <article class="journey-card"><span class="journey-badge">10</span><h3>Loop Capstone + AI Safety</h3><p class="story">Finish with a multiverse portal mission that combines both loop types and responsible Gemini prompting.</p><div class="journey-tags"><span class="tag">capstone</span><span class="tag">AI safety</span><span class="tag">summaries</span></div><div class="hero-actions"><a class="button button-secondary" href="../course-pack/student-pack/interactive/?lesson=lesson-10">Open in IDE</a></div></article>
+              <article class="journey-card"><span class="journey-badge">1</span><h3>Mission Control</h3><p class="story">Create a tribute profile console and practise variables, types, reassignment, and formatted output.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-01">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">2</span><h3>Dialogue Engine</h3><p class="story">Unlock a gate using two clues while learning input, conversion, arithmetic, and clean terminal messaging.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-02">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">3</span><h3>Choices and Consequences</h3><p class="story">Sort a traveller into a faction with if, elif, else, comparison logic, and branch testing.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-03">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">4</span><h3>Data Without Loops</h3><p class="story">Manage house records with lists, tuples, indexes, and a points bonus applied by position.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-04">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">5</span><h3>Structured Logic Challenge</h3><p class="story">Combine input, arithmetic, list data, and conditions to build a reliability score validator.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-05">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">6</span><h3>Capstone Simulation</h3><p class="story">Choose a scenario and assemble a complete mini-simulator that proves all pre-loop skills.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-06">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">7</span><h3>Loop Launch</h3><p class="story">Introduce for loops by scanning checkpoints and learning how repetition can be controlled.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-07">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">8</span><h3>While Loop Control</h3><p class="story">Use a countdown lock to practise safe while loops, counters, and stopping conditions.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-08">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">9</span><h3>Loop Patterns Mixed</h3><p class="story">Combine for and while to validate input, process a trainee queue, and detect edge cases.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-09">Open lesson</a></article>
+              <article class="journey-card"><span class="journey-badge">10</span><h3>Loop Capstone + AI Safety</h3><p class="story">Finish with a multiverse portal mission that combines both loop types and responsible Gemini prompting.</p><a href="../course-pack/student-pack/interactive/?lesson=lesson-10">Open lesson</a></article>
             </div>
           </section>
 
