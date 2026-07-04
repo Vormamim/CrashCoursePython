@@ -116,6 +116,198 @@ html, body {
   margin-top: 1.15rem;
 }
 
+/* ── Theory slide-out panel ─────────────────────────────── */
+.theory-panel {
+  position: fixed;
+  /* `top` is set inline by ide.js to sit just below #row-nav (whose height
+     varies as lesson buttons wrap), so the panel never covers nav buttons. */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 92vw);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(18, 18, 38, 0.98), rgba(8, 9, 20, 0.98));
+  border-left: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: -18px 0 48px rgba(0, 0, 0, 0.55);
+  transform: translateX(100%);
+  transition: transform 0.28s ease, visibility 0s linear 0.28s;
+  z-index: 25; /* below .lesson-modal's z-index: 30 */
+  visibility: hidden;
+}
+
+.theory-panel.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.28s ease, visibility 0s linear 0s;
+}
+
+.theory-panel__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem 0.75rem;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.theory-panel__kicker {
+  margin: 0 0 0.3rem;
+  color: #9dfcff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.theory-panel__title {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.theory-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.1rem 1.5rem;
+}
+
+.theory-panel__empty {
+  color: #d8d1ff;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.theory-card {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(12, 12, 28, 0.6);
+  padding: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.theory-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: #ff8de9;
+}
+
+.theory-card p {
+  margin: 0 0 0.6rem;
+  color: #d8d1ff;
+  font-size: 0.9rem;
+}
+
+.theory-card pre {
+  margin: 0;
+  background: #111;
+  border-radius: 8px;
+  padding: 0.5rem 0.6rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.82rem;
+  color: #d4d4d4;
+  overflow-x: auto;
+}
+
+.theory-card .snippet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.theory-card .copy-btn {
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(255, 79, 216, 0.18);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.quiz-section {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 229, 255, 0.15);
+}
+
+.quiz-section__title {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: #9dfcff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quiz-question {
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(12, 12, 28, 0.6);
+  padding: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+
+.quiz-question__prompt {
+  margin: 0 0 0.6rem;
+  color: #d8d1ff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.quiz-option {
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e8e8e8;
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.quiz-option:hover:not(:disabled) {
+  background: rgba(0, 229, 255, 0.12);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.quiz-option.is-correct {
+  border-color: #00bc8c;
+  background: rgba(0, 188, 140, 0.22);
+  color: #baffe9;
+}
+
+.quiz-option.is-incorrect {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.18);
+  color: #ffd2d2;
+}
+
+.quiz-feedback {
+  margin: 0.5rem 0 0;
+  min-height: 1.1em;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.quiz-feedback--correct   { color: #00bc8c; }
+.quiz-feedback--incorrect { color: #ff6b6b; }
+
 /* Lesson button status indicators */
 .lesson-nav-btn {
   font-size: 0.78rem;
@@ -282,5 +474,9 @@ html, body {
   .lesson-nav-btn {
     font-size: 0.72rem;
     padding: 0.2rem 0.45rem;
+  }
+
+  .theory-panel {
+    width: 100vw;
   }
 }

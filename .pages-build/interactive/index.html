@@ -63,6 +63,11 @@
           ↓ Save
         </button>
 
+        <!-- THEORY: toggle the right-side lesson theory drawer -->
+        <button id="btn-theory" class="btn btn-sm btn-outline-info" title="Show lesson theory" aria-expanded="false" aria-controls="theory-panel">
+          📘 Theory
+        </button>
+
         <!-- Runtime status indicator (loading / ready / running) -->
         <span id="status-msg">Loading Python runtime…</span>
 
@@ -102,6 +107,19 @@
     </div>
 
   </div><!-- #ide-app -->
+
+  <aside id="theory-panel" class="theory-panel" aria-hidden="true" role="complementary" aria-label="Lesson theory">
+    <div class="theory-panel__top">
+      <div>
+        <p class="theory-panel__kicker">Theory</p>
+        <h2 id="theory-panel-title" class="theory-panel__title">Lesson title</h2>
+      </div>
+      <button id="btn-theory-close" type="button" class="btn btn-sm btn-outline-light theory-panel__close" title="Close theory panel">Close</button>
+    </div>
+    <div id="theory-panel-body" class="theory-panel__body">
+      <!-- theory cards rendered by ide.js renderTheoryPanel() -->
+    </div>
+  </aside>
 
   <div id="lesson-modal" class="lesson-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lesson-modal-title">
     <div class="lesson-modal__panel">

@@ -21,6 +21,11 @@ const lessonModalStory = document.getElementById("lesson-modal-story");
 const lessonModalTags = document.getElementById("lesson-modal-tags");
 const btnModalClose = document.getElementById("btn-modal-close");
 const btnModalStart = document.getElementById("btn-modal-start");
+const theoryPanel = document.getElementById("theory-panel");
+const theoryPanelTitle = document.getElementById("theory-panel-title");
+const theoryPanelBody = document.getElementById("theory-panel-body");
+const btnTheory = document.getElementById("btn-theory");
+const btnTheoryClose = document.getElementById("btn-theory-close");
 
 // ── Runtime state ─────────────────────────────────────────
 let pyodide = null;          // set once Pyodide is loaded
@@ -40,6 +45,34 @@ function appendOutput(text, cls) {
 
 function clearOutput() {
   output.textContent = "";
+}
+
+/**
+ * Copy text to the clipboard, briefly flashing the button label.
+ * If the clipboard API is unavailable, falls back to selecting `fallbackEl`
+ * (a visible DOM node containing the same text) so the user can copy
+ * manually, or selecting the editor's own text if no `fallbackEl` is given.
+ */
+async function copyToClipboard(text, button, fallbackEl) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (button) {
+      const orig = button.textContent;
+      button.textContent = "Copied";
+      setTimeout(() => { button.textContent = orig; }, 1200);
+    }
+  } catch {
+    if (fallbackEl) {
+      const range = document.createRange();
+      range.selectNodeContents(fallbackEl);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+    } else {
+      editor.focus();
+      editor.select();
+    }
+  }
 }
 
 // ── Line-number gutter ────────────────────────────────────
@@ -160,6 +193,158 @@ function closeLessonModal() {
   editor.focus();
 }
 
+// ── Theory panel controls ─────────────────────────────────
+
+/** Build one read-only theory card (heading + explanation + copyable code) for the panel body. */
+function renderTheoryCard(item) {
+  const card = document.createElement("div");
+  card.className = "theory-card";
+
+  const heading = document.createElement("h3");
+  heading.textContent = item.heading;
+  card.appendChild(heading);
+
+  const explanation = document.createElement("p");
+  explanation.textContent = item.explanation;
+  card.appendChild(explanation);
+
+  const head = document.createElement("div");
+  head.className = "snippet-head";
+  const label = document.createElement("span");
+  label.textContent = "Sample";
+  head.appendChild(label);
+
+  const copyBtn = document.createElement("button");
+  copyBtn.type = "button";
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = "Copy";
+  head.appendChild(copyBtn);
+  card.appendChild(head);
+
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  code.textContent = item.code;
+  pre.appendChild(code);
+  card.appendChild(pre);
+
+  copyBtn.addEventListener("click", () => copyToClipboard(item.code, copyBtn, code));
+
+  return card;
+}
+
+/** Rebuild the theory panel's content for the given lesson. */
+function renderTheoryPanel(lesson) {
+  if (!theoryPanel) return;
+  theoryPanelTitle.textContent = lesson.title;
+  theoryPanelBody.innerHTML = "";
+
+  const theory = lesson.theory || [];
+  if (theory.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "theory-panel__empty";
+    empty.textContent = "No theory notes for this lesson yet.";
+    theoryPanelBody.appendChild(empty);
+  } else {
+    theory.forEach(item => theoryPanelBody.appendChild(renderTheoryCard(item)));
+  }
+
+  renderQuizSection(lesson);
+}
+
+/** Build one multiple-choice quiz question (prompt + option buttons + feedback line). */
+function renderQuizQuestion(q, index) {
+  const wrap = document.createElement("div");
+  wrap.className = "quiz-question";
+
+  const prompt = document.createElement("p");
+  prompt.className = "quiz-question__prompt";
+  prompt.textContent = `${index + 1}. ${q.question}`;
+  wrap.appendChild(prompt);
+
+  const optionsWrap = document.createElement("div");
+  optionsWrap.className = "quiz-options";
+  wrap.appendChild(optionsWrap);
+
+  const feedback = document.createElement("p");
+  feedback.className = "quiz-feedback";
+  feedback.setAttribute("aria-live", "polite");
+  wrap.appendChild(feedback);
+
+  q.options.forEach((optionText, optionIndex) => {
+    const optionBtn = document.createElement("button");
+    optionBtn.type = "button";
+    optionBtn.className = "quiz-option";
+    optionBtn.textContent = optionText;
+
+    optionBtn.addEventListener("click", () => {
+      if (optionIndex === q.correctIndex) {
+        optionBtn.classList.add("is-correct");
+        feedback.textContent = "Correct!";
+        feedback.className = "quiz-feedback quiz-feedback--correct";
+        optionsWrap.querySelectorAll(".quiz-option").forEach(btn => { btn.disabled = true; });
+      } else {
+        optionBtn.classList.add("is-incorrect");
+        feedback.textContent = "Not quite — try another option.";
+        feedback.className = "quiz-feedback quiz-feedback--incorrect";
+      }
+    });
+
+    optionsWrap.appendChild(optionBtn);
+  });
+
+  return wrap;
+}
+
+/** Append the "Check your understanding" quiz section for the given lesson, if it has quiz content. */
+function renderQuizSection(lesson) {
+  const quiz = lesson.quiz || [];
+  if (quiz.length === 0) return;
+
+  const section = document.createElement("div");
+  section.className = "quiz-section";
+
+  const heading = document.createElement("h3");
+  heading.className = "quiz-section__title";
+  heading.textContent = "Check your understanding";
+  section.appendChild(heading);
+
+  quiz.forEach((q, index) => section.appendChild(renderQuizQuestion(q, index)));
+
+  theoryPanelBody.appendChild(section);
+}
+
+/** Keep the panel's top edge below #row-nav, which wraps to multiple lines
+ *  at some widths, so the drawer never covers lesson nav buttons. */
+function positionTheoryPanel() {
+  if (!theoryPanel || !navRow) return;
+  theoryPanel.style.top = navRow.getBoundingClientRect().bottom + "px";
+}
+
+function openTheoryPanel() {
+  if (!theoryPanel) return;
+  positionTheoryPanel();
+  theoryPanel.classList.add("is-open");
+  theoryPanel.setAttribute("aria-hidden", "false");
+  if (btnTheory) btnTheory.setAttribute("aria-expanded", "true");
+}
+
+function closeTheoryPanel() {
+  if (!theoryPanel) return;
+  theoryPanel.classList.remove("is-open");
+  theoryPanel.setAttribute("aria-hidden", "true");
+  if (btnTheory) btnTheory.setAttribute("aria-expanded", "false");
+  editor.focus();
+}
+
+function toggleTheoryPanel() {
+  if (!theoryPanel) return;
+  if (theoryPanel.classList.contains("is-open")) {
+    closeTheoryPanel();
+  } else {
+    openTheoryPanel();
+  }
+}
+
 // ── Lesson navigation ─────────────────────────────────────
 
 /** Map a lesson status string to a Bootstrap button variant. */
@@ -211,6 +396,7 @@ function selectLesson(id) {
   clearErrorLine();
   renderGutter();
   renderNav();
+  renderTheoryPanel(lesson);
   openLessonModal(lesson);
 }
 
@@ -352,18 +538,7 @@ btnReset.addEventListener("click", () => {
 });
 
 // ── COPY ──────────────────────────────────────────────────
-btnCopy.addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(editor.value);
-    const orig = btnCopy.textContent;
-    btnCopy.textContent = "✓ Copied";
-    setTimeout(() => { btnCopy.textContent = orig; }, 1500);
-  } catch {
-    // Fallback: select all text so the user can copy manually
-    editor.focus();
-    editor.select();
-  }
-});
+btnCopy.addEventListener("click", () => copyToClipboard(editor.value, btnCopy));
 
 // ── LOAD ──────────────────────────────────────────────────
 btnLoad.addEventListener("click", () => fileInput.click());
@@ -401,6 +576,27 @@ btnSave.addEventListener("click", () => {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+});
+
+// ── Theory panel controls ────────────────────────────────
+if (btnTheory) {
+  btnTheory.addEventListener("click", toggleTheoryPanel);
+}
+
+if (btnTheoryClose) {
+  btnTheoryClose.addEventListener("click", closeTheoryPanel);
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && theoryPanel && theoryPanel.classList.contains("is-open")) {
+    closeTheoryPanel();
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (theoryPanel && theoryPanel.classList.contains("is-open")) {
+    positionTheoryPanel();
+  }
 });
 
 // ── Lesson modal controls ────────────────────────────────
