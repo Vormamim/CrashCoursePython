@@ -72,15 +72,18 @@
         </a>
       </div>
 
-      <!-- Code editor textarea -->
-      <textarea
-        id="editor"
-        spellcheck="false"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        aria-label="Python code editor"
-        placeholder="# Write your Python code here…"></textarea>
+      <!-- Code editor: line-number gutter + textarea -->
+      <div id="editor-wrap">
+        <div id="editor-gutter" aria-hidden="true"></div>
+        <textarea
+          id="editor"
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          aria-label="Python code editor"
+          placeholder="# Write your Python code here…"></textarea>
+      </div>
     </div>
 
     <!-- ── Row 3: Output console ─────────────────────────── -->

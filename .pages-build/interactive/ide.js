@@ -4,6 +4,7 @@
 
 // ── DOM references ────────────────────────────────────────
 const editor    = document.getElementById("editor");
+const editorGutter = document.getElementById("editor-gutter");
 const output    = document.getElementById("output");
 const btnRun    = document.getElementById("btn-run");
 const btnReset  = document.getElementById("btn-reset");
@@ -13,6 +14,13 @@ const btnSave   = document.getElementById("btn-save");
 const fileInput = document.getElementById("file-input");
 const statusMsg = document.getElementById("status-msg");
 const navRow    = document.getElementById("row-nav");
+const lessonModal = document.getElementById("lesson-modal");
+const lessonModalTitle = document.getElementById("lesson-modal-title");
+const lessonModalGoal = document.getElementById("lesson-modal-goal");
+const lessonModalStory = document.getElementById("lesson-modal-story");
+const lessonModalTags = document.getElementById("lesson-modal-tags");
+const btnModalClose = document.getElementById("btn-modal-close");
+const btnModalStart = document.getElementById("btn-modal-start");
 
 // ── Runtime state ─────────────────────────────────────────
 let pyodide = null;          // set once Pyodide is loaded
@@ -34,6 +42,50 @@ function clearOutput() {
   output.textContent = "";
 }
 
+// ── Line-number gutter ────────────────────────────────────
+
+/** Rebuild the gutter's line numbers to match the editor's current line count. */
+function renderGutter() {
+  if (!editorGutter) return;
+  const lineCount = editor.value.split("\n").length;
+  let html = "";
+  for (let i = 1; i <= lineCount; i++) {
+    html += `<div class="gutter-line" data-line="${i}">${i}</div>`;
+  }
+  editorGutter.innerHTML = html;
+  syncGutterScroll();
+}
+
+/** Keep the gutter's scroll position matched to the editor's. */
+function syncGutterScroll() {
+  if (!editorGutter) return;
+  editorGutter.scrollTop = editor.scrollTop;
+}
+
+/** Highlight the gutter entry for the line a Python error occurred on. */
+function highlightErrorLine(lineNumber) {
+  if (!editorGutter) return;
+  clearErrorLine();
+  const el = editorGutter.querySelector(`.gutter-line[data-line="${lineNumber}"]`);
+  if (el) el.classList.add("is-error-line");
+}
+
+/** Clear any previously highlighted error line in the gutter. */
+function clearErrorLine() {
+  if (!editorGutter) return;
+  const prev = editorGutter.querySelector(".is-error-line");
+  if (prev) prev.classList.remove("is-error-line");
+}
+
+/** Extract the last "line N" reference from a Python traceback string. */
+function findErrorLine(errText) {
+  const matches = [...errText.matchAll(/line (\d+)/g)];
+  if (!matches.length) return null;
+  return parseInt(matches[matches.length - 1][1], 10);
+}
+
+editor.addEventListener("scroll", syncGutterScroll);
+
 // ── Progress (localStorage) ───────────────────────────────
 
 const PROGRESS_KEY = "ide-progress";
@@ -54,6 +106,58 @@ function setLessonStatus(id, status) {
 
 function getLessonStatus(id) {
   return getProgress()[id] || "not-started";
+}
+
+function getRequestedLessonId() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get("lesson");
+  if (!requested) return null;
+  return LESSONS.some(lesson => lesson.id === requested) ? requested : null;
+}
+
+function getLessonTags(lesson) {
+  const summaryTags = {
+    "lesson-01": ["variables", "types", "output"],
+    "lesson-02": ["input", "conversion", "math"],
+    "lesson-03": ["branching", "logic", "nested if"],
+    "lesson-04": ["lists", "tuples", "indexes"],
+    "lesson-05": ["debugging", "trace tables", "conditions"],
+    "lesson-06": ["planning", "testing", "reflection"],
+    "lesson-07": ["for loops", "range()", "patterns"],
+    "lesson-08": ["while loops", "counters", "safety"],
+    "lesson-09": ["validation", "mixed loops", "testing"],
+    "lesson-10": ["capstone", "AI safety", "summaries"]
+  };
+
+  return summaryTags[lesson.id] || [];
+}
+
+function renderLessonModal(lesson) {
+  lessonModalTitle.textContent = lesson.title;
+  lessonModalGoal.textContent = lesson.goal;
+  lessonModalStory.textContent = lesson.story;
+  lessonModalTags.innerHTML = "";
+
+  getLessonTags(lesson).forEach(tag => {
+    const span = document.createElement("span");
+    span.className = "tag";
+    span.textContent = tag;
+    lessonModalTags.appendChild(span);
+  });
+}
+
+function openLessonModal(lesson) {
+  if (!lessonModal || !lesson) return;
+  renderLessonModal(lesson);
+  lessonModal.classList.add("is-open");
+  lessonModal.setAttribute("aria-hidden", "false");
+}
+
+function closeLessonModal() {
+  if (!lessonModal) return;
+  lessonModal.classList.remove("is-open");
+  lessonModal.setAttribute("aria-hidden", "true");
+  editor.focus();
 }
 
 // ── Lesson navigation ─────────────────────────────────────
@@ -104,11 +208,64 @@ function selectLesson(id) {
   editor.value = saved !== null ? saved : lesson.starterCode;
 
   clearOutput();
+  clearErrorLine();
+  renderGutter();
   renderNav();
+  openLessonModal(lesson);
 }
+
+// ── Editor indentation (Tab / auto-indent after ':') ───────
+const INDENT = "    "; // 4 spaces, matches PEP 8
+
+editor.addEventListener("keydown", e => {
+  const { selectionStart: start, selectionEnd: end, value } = editor;
+
+  if (e.key === "Tab") {
+    e.preventDefault();
+
+    if (e.shiftKey) {
+      // Shift+Tab: remove up to one indent level from the start of the line
+      const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+      const lineText = value.slice(lineStart, lineStart + INDENT.length);
+      const removeLen = lineText === INDENT ? INDENT.length
+        : (lineText.startsWith("\t") ? 1 : 0);
+      if (removeLen > 0) {
+        editor.value = value.slice(0, lineStart) + value.slice(lineStart + removeLen);
+        editor.selectionStart = Math.max(lineStart, start - removeLen);
+        editor.selectionEnd = Math.max(lineStart, end - removeLen);
+      }
+    } else {
+      // Tab: insert an indent at the cursor (replacing any selection)
+      editor.value = value.slice(0, start) + INDENT + value.slice(end);
+      editor.selectionStart = editor.selectionEnd = start + INDENT.length;
+    }
+    editor.dispatchEvent(new Event("input"));
+    return;
+  }
+
+  if (e.key === "Enter") {
+    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    const currentLine = value.slice(lineStart, start);
+    const currentIndent = (currentLine.match(/^[ \t]*/) || [""])[0];
+
+    // Add one extra indent level if the line (ignoring trailing
+    // whitespace/comments) opens a new block, e.g. "if x == 5:"
+    const codeOnly = currentLine.replace(/#.*$/, "").trimEnd();
+    const extraIndent = codeOnly.endsWith(":") ? INDENT : "";
+
+    e.preventDefault();
+    const insertion = "\n" + currentIndent + extraIndent;
+    editor.value = value.slice(0, start) + insertion + value.slice(end);
+    editor.selectionStart = editor.selectionEnd = start + insertion.length;
+    editor.dispatchEvent(new Event("input"));
+  }
+});
 
 // ── Track edits → persist code + mark in-progress ─────────
 editor.addEventListener("input", () => {
+  renderGutter();
+  clearErrorLine();
+
   if (!currentLessonId) return;
   localStorage.setItem("ide-code-" + currentLessonId, editor.value);
 
@@ -124,6 +281,7 @@ btnRun.addEventListener("click", async () => {
   if (!pyodide) return;
 
   clearOutput();
+  clearErrorLine();
   btnRun.disabled = true;
   statusMsg.textContent = "Running…";
 
@@ -152,13 +310,23 @@ btnRun.addEventListener("click", async () => {
       renderNav();
     }
   } catch (err) {
-    // Capture any stdout that printed before the error
+    // Capture any stdout that printed before the error. The traceback text
+    // itself lands in the redirected sys.stderr buffer, not on `err`, so
+    // that's the message we display (falling back to `err` if unavailable).
+    let stderrText = "";
     try {
       const stdout = pyodide.runPython("sys.stdout.getvalue()");
       if (stdout) appendOutput(stdout, "out-stdout");
+      stderrText = pyodide.runPython("sys.stderr.getvalue()");
     } catch { /* ignore secondary error */ }
 
-    appendOutput(String(err) + "\n", "out-error");
+    const errText = stderrText || String(err);
+    const errLine = findErrorLine(errText);
+    if (errLine !== null) {
+      appendOutput(`⚠ Error on line ${errLine}\n`, "out-error-heading");
+      highlightErrorLine(errLine);
+    }
+    appendOutput(errText + "\n", "out-error");
 
     // Ensure progress at least moves to in-progress
     if (currentLessonId && getLessonStatus(currentLessonId) === "not-started") {
@@ -179,6 +347,8 @@ btnReset.addEventListener("click", () => {
   editor.value = lesson.starterCode;
   localStorage.removeItem("ide-code-" + currentLessonId);
   clearOutput();
+  clearErrorLine();
+  renderGutter();
 });
 
 // ── COPY ──────────────────────────────────────────────────
@@ -204,6 +374,8 @@ fileInput.addEventListener("change", e => {
   const reader = new FileReader();
   reader.onload = ev => {
     editor.value = ev.target.result;
+    clearErrorLine();
+    renderGutter();
     if (currentLessonId) {
       localStorage.setItem("ide-code-" + currentLessonId, editor.value);
       if (getLessonStatus(currentLessonId) === "not-started") {
@@ -230,6 +402,23 @@ btnSave.addEventListener("click", () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+// ── Lesson modal controls ────────────────────────────────
+if (btnModalClose) {
+  btnModalClose.addEventListener("click", closeLessonModal);
+}
+
+if (btnModalStart) {
+  btnModalStart.addEventListener("click", closeLessonModal);
+}
+
+if (lessonModal) {
+  lessonModal.addEventListener("click", event => {
+    if (event.target === lessonModal) {
+      closeLessonModal();
+    }
+  });
+}
 
 // ── Pyodide initialisation ────────────────────────────────
 async function initPyodide() {
@@ -258,7 +447,9 @@ async function initPyodide() {
 // ── Entry point ───────────────────────────────────────────
 (function init() {
   if (LESSONS.length > 0) {
-    selectLesson(LESSONS[0].id);
+    selectLesson(getRequestedLessonId() || LESSONS[0].id);
+  } else {
+    renderGutter();
   }
   initPyodide();
 }());

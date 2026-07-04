@@ -162,6 +162,34 @@ html, body {
   font-style: italic;
 }
 
+#editor-wrap {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#editor-gutter {
+  flex: 0 0 auto;
+  padding: 0.6rem 0.5rem 0.6rem 0.75rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: right;
+  color: #6b7280;
+  background-color: #15152a;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  white-space: pre;
+  user-select: none;
+}
+
+#editor-gutter .gutter-line.is-error-line {
+  color: #ff6b6b;
+  font-weight: 700;
+  background-color: rgba(255, 107, 107, 0.12);
+}
+
 #editor {
   flex: 1;
   resize: none;
@@ -220,6 +248,9 @@ html, body {
 /* Errors and tracebacks – red */
 .out-error  { color: #ff6b6b; }
 
+/* Bold callout naming the offending line, shown above the traceback */
+.out-error-heading { color: #ff6b6b; font-weight: 700; }
+
 /* Info/empty messages – muted */
 .out-info   { color: #888; font-style: italic; }
 
@@ -239,7 +270,8 @@ html, body {
     padding-right: 0.95rem;
   }
 
-  #editor {
+  #editor,
+  #editor-gutter {
     font-size: 0.82rem;
   }
 

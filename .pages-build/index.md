@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Python Crash Course
 
 Learn beginner Python by building game mechanics.

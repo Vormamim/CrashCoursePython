@@ -6,6 +6,8 @@ const LESSONS = [
   {
     id: "lesson-01",
     title: "1 · Mission Control",
+    goal: "Create a simple tribute profile and practise variables, types, reassignment, and printed output.",
+    story: "The mission console wakes up and asks the student to introduce a crew member before the arena simulation starts.",
     starterCode: `# Lesson 1 starter: Mission Control
 
 print("Arena Mission Console")
@@ -31,6 +33,8 @@ print("TODO: complete Lesson 1 starter tasks.")
   {
     id: "lesson-02",
     title: "2 · Dialogue Engine",
+    goal: "Unlock the gate by collecting clues, converting input, and using a simple decision.",
+    story: "A sealed terminal is waiting for the right pair of clues, and the student has to calculate the unlock code.",
     starterCode: `# Lesson 2 starter: Dialogue Engine
 
 print("Escape Room Terminal")
@@ -58,6 +62,8 @@ print("TODO: complete Lesson 2 starter tasks.")
   {
     id: "lesson-03",
     title: "3 · Choices & Consequences",
+    goal: "Sort a traveller into the right faction using comparison logic and nested branching.",
+    story: "The faction gate opens only when the traveller’s scores are judged fairly by the placement system.",
     starterCode: `# Lesson 3 starter: Choices and Consequences
 
 print("Faction Placement Simulator")
@@ -80,6 +86,8 @@ print("TODO: complete Lesson 3 starter tasks.")
   {
     id: "lesson-04",
     title: "4 · Data Without Loops",
+    goal: "Use lists, tuples, indexes, and if/else logic to manage house records.",
+    story: "The academy dashboard needs a quick leader update before the annual points report is sent out.",
     starterCode: `# Lesson 4 starter: Data Without Loops
 
 print("House Points Tracker Lite")
@@ -102,6 +110,8 @@ print("TODO: complete Lesson 4 starter tasks.")
   {
     id: "lesson-05",
     title: "5 · Structured Logic",
+    goal: "Combine input, arithmetic, list data, and branching to build a full portal checkpoint.",
+    story: "The portal team is under pressure, and the student has to decide whether the system is denied, conditional, or approved.",
     starterCode: `# Lesson 5 starter: Structured Logic Challenge
 
 print("Portal Clearance System")
@@ -126,6 +136,8 @@ print("TODO: complete Lesson 5 starter tasks.")
   {
     id: "lesson-06",
     title: "6 · Capstone Simulation",
+    goal: "Design a complete mini-simulator that connects the first half of the course.",
+    story: "The first mission arc closes with a custom simulator chosen by the student team.",
     starterCode: `# Lesson 6 starter: Capstone Simulation Template
 
 print("Capstone Simulation")
@@ -154,6 +166,8 @@ print("TODO: complete Lesson 6 starter tasks.")
   {
     id: "lesson-07",
     title: "7 · Loop Launch (for)",
+    goal: "Practise for loops by scanning checkpoints and spotting repeating patterns.",
+    story: "The maze scanner comes online and the student has to sweep each checkpoint in order.",
     starterCode: `# Lesson 7 starter: Loop Launch (for)
 
 print("Maze Checkpoint Scanner")
@@ -178,6 +192,8 @@ print("TODO: complete Lesson 7 starter tasks.")
   {
     id: "lesson-08",
     title: "8 · Loop Control (while)",
+    goal: "Use a while loop with a counter and a safe stopping condition.",
+    story: "A launch countdown begins, and the student must keep the terminal running until the timer reaches zero.",
     starterCode: `# Lesson 8 starter: Loop Control (while)
 
 print("Arena Countdown Terminal")
@@ -207,6 +223,8 @@ print("TODO: complete Lesson 8 starter tasks.")
   {
     id: "lesson-09",
     title: "9 · Loop Patterns (mixed)",
+    goal: "Mix for and while loops to validate input and process a queue of trainees.",
+    story: "The faction trial needs repeated score checks, and the student has to decide which loop solves each part.",
     starterCode: `# Lesson 9 starter: Loop Patterns (mixed)
 
 print("Faction Trial Queue")
@@ -242,6 +260,8 @@ print("TODO: complete Lesson 9 starter tasks.")
   {
     id: "lesson-10",
     title: "10 · Loop Capstone",
+    goal: "Finish the course with a loop-based capstone and responsible Gemini prompting.",
+    story: "The final portal rotation mission brings the whole story together and asks the student to document the result safely.",
     starterCode: `# Lesson 10 starter: Loop Capstone + AI Safety
 
 print("Portal Rotation Control")
