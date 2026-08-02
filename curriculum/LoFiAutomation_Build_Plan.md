@@ -1,66 +1,254 @@
 # lofiautomation — Build Plan (for a future session)
 
-**Status:** not started. This is a planning document to pick up cold in a later session — nothing below has been built or spiked yet.
+**Status:** content sequence confirmed against the real course specifications; revised for exam-technique delivery close to the HSC exam, with full NESA key-word coverage locked in. Not yet built — nothing below has been coded or spiked.
 
-## 1. Scope caveat — verify before building
+**Delivery context (new):** this unit sits late in the Year 12 program, close to the HSC exam itself — see the sequence in `HSC_Software_Engineering_Scope_and_Sequence.md` (Secure Software Architecture → LoFiFlask → this unit, "throughout" the Software Engineering project). That timing changes the brief: this isn't a first-encounter-with-new-skills unit, it's the last content block before students sit the paper. So every lesson does double duty — it still teaches the confirmed Software Automation content (§1), but it's now explicitly built to drill **how to answer** using NESA's own key words, since that's the highest-leverage thing to reinforce this close to the exam. If time is short when this is actually delivered, Lessons 1–2 (context-setting) are the ones that can be compressed or skipped — Lessons 3–10 carry both the remaining content and all the exam-technique weight, so protect those.
 
-The Software Automation Year 12 focus area's exact content dot points were **not** reliably retrievable during this planning session (the NESA curriculum site renders content dynamically and general web search only surfaced high-level framing, not verbatim dot points). What's confirmed, from NSW DoE's own summary:
+## 1. Scope — confirmed against the official course specifications
 
-> "In software automation, learning to program machine learning and artificial intelligence... is completely new content. The Software Automation focus area provides opportunities for students to extend their knowledge and understanding of programming and its diverse applications, with learning in this focus area emphasising the fields of machine learning (ML) and artificial intelligence (AI)."
+The *Higher School Certificate Course Specifications — Software Engineering* (NESA, updated March 2026) gives the verbatim content for this focus area under its **Machine Learning** heading (pp.27–29). Three sub-topics:
 
-**First task next session:** open the actual syllabus content page (`curriculum.nsw.edu.au/learning-areas/tas/software-engineering-11-12-2022/content`, Year 12 → Software automation) directly in a browser (not fetched, since it's a JS-rendered page that didn't yield full content to automated fetching) and transcribe the real dot points before locking in a lesson sequence. Everything in §3 below is a reasonable draft based on what ML/AI-for-beginners-in-Python conventionally covers, not a verified syllabus mapping — treat it as a starting hypothesis, not a plan to build from unchecked.
+- **Machine learning automation (MLOps)** — three cyclic stages: *Design* (business problem → ML problem, success metrics, data research), *Model development* (data wrangling, feature engineering, training, testing/validation), *Operations* (deployment, supporting use, monitoring performance). A looping three-circle diagram — students **know** the stages, they don't build a pipeline.
+- **Regression algorithms** — linear/polynomial (continuous prediction) and logistic (classification). The spec is explicit: *"Students should know how to design programs which use and apply these algorithms but are not expected to implement (or code) these complex algorithms."* It supplies a worked NumPy/Scikit-learn example to **interpret and run**, not write from scratch.
+- **Neural networks** — training cycle vs execution cycle, diagram-only, no code given anywhere in the spec.
 
-## 2. Technical feasibility spike — do this before writing any lesson content
+**Reading the spec as a boundary document:** its wording marks what NESA can and can't examine, and that governs every question written for this unit.
+- *In bounds*: naming/explaining MLOps stages; interpreting the given regression code; explaining regression vs classification; reading training/execution behaviour off a diagram; justifying an algorithm choice.
+- *Out of bounds*: implementing/coding any of these algorithms; writing novel Scikit-learn unaided; requiring framework knowledge beyond the spec's own example (same pattern as the "no specific framework" line under Front-end web development frameworks, p.25).
+- *Test for every question written*: if it can only be answered by producing code, it's testing content NESA has ruled out — rewrite as identify/explain/justify (or whichever key word fits — see §4).
 
-The single biggest risk: does Pyodide support `scikit-learn` (and its dependencies — `numpy`, `scipy`, `joblib`, `pandas`) well enough to run real ML code client-side, the same way the Flask spike validated `micropip.install('flask')` + `test_client()` before LoFiFlask was built?
+Disambiguation: the spec's "Decision trees" (p.10, System and Data Modelling Tools) is a business-rule planning diagram, not an ML classifier — don't conflate the two.
 
-Recommended spike, mirroring `lofiflask/spike/validate.mjs`:
+**Outcomes emphasis:** SE-12-01, 03, 05, 06 (justifies methods; analyses emerging technology; social/ethical/legal implications; justifies tool selection). SE-12-02 and SE-12-08 aren't meaningfully exercised since students don't write or refine the ML code itself.
 
-```js
-// spike/validate-sklearn.mjs — run with `node`, using the pyodide npm package
-import { loadPyodide } from "pyodide";
-const pyodide = await loadPyodide({ indexURL: ... });
-await pyodide.loadPackage(["numpy", "scikit-learn"]); // or micropip.install if not a built-in package
-await pyodide.runPythonAsync(`
-import numpy as np
-from sklearn.linear_model import LogisticRegression
-X = np.array([[0],[1],[2],[3]])
-y = np.array([0,0,1,1])
-model = LogisticRegression().fit(X, y)
-print(model.predict([[1.5]]))
-`);
-```
+## 2. Technical feasibility spike — DONE, result: real Scikit-learn confirmed correct, but too heavy to load live per-classroom
 
-If this fails or is too slow/heavy for a browser tab (scikit-learn + numpy + scipy is a much larger download than Flask), fallback options to consider:
-- A hand-rolled, dependency-free "toy" ML implementation in pure Python (e.g. a simple linear regression via gradient descent, a basic decision tree) — loses the "real scikit-learn" authenticity but guarantees it runs anywhere.
-- `pandas` alone (lighter weight, well-supported in Pyodide) for a "data automation" framing that leans more on data wrangling/scripting than full ML, if scikit-learn proves impractical in-browser.
+Run 2026-08-01, `lofiautomation/spike/validate-sklearn.mjs` (mirrors `lofiflask/spike/validate.mjs`'s style). Pyodide 0.24.1, run via `node`.
 
-Do not commit to a 10-lesson architecture until this spike passes, exactly as the Flask spike (`lofiflask/spike/validate.mjs`, `smoke-test.mjs`) was done first and validated end-to-end before any lesson content was written.
+**Correctness — passed cleanly.** Reproduced the course specification's own `LinearRegression` example (p.28) exactly: `predict([[4]])` → `3`, `predict([[4.5]])` → `3.5`, matching the spec's stated expected output. Also validated `LogisticRegression` (needed for Lesson 5), which fit and predicted correctly too. So the content plan (§4/§5) is sound — this really is the real Scikit-learn behaviour the spec describes, not an approximation.
 
-## 3. Draft lesson sequence (hypothesis — confirm against §1 first)
+**Weight — the actual blocker.** Cold-load timings and download sizes:
 
-Following the same house style as every other unit in this suite: relatable-analogy-first explanations, 10 lessons, worked example → challenge(s) → debugging checkpoint → exit ticket per lesson, self-marking checks in the sandbox (à la Secure Software Architecture's tiered grading), synthwave visual theme, cross-links back to Secure Software Architecture and LoFiFlask where relevant (e.g. data validation/security when handling a training dataset).
+| Stage | Time | Notes |
+| --- | --- | --- |
+| Pyodide runtime load | 1.8s | Core interpreter only |
+| numpy + scikit-learn package load | 3.5s | Pulls in scipy, openblas, joblib, threadpoolctl, distutils as transitive deps |
+| First `LinearRegression.fit()` call | 3.0s | JIT/first-call warmup cost, one-off |
+| `LogisticRegression.fit()` call | 14ms | Trivial once the stack is warm |
+| **Total cold run** | **~8.3s** (this machine, cached CDN, no network contention) | |
 
-| # | Working title | Idea |
+| Package | Size |
+| --- | --- |
+| scipy | 39MB |
+| scikit-learn | 18MB |
+| numpy | 12MB |
+| python stdlib | 8.5MB |
+| openblas | 5.6MB |
+| distutils | 0.6MB |
+| joblib | 0.58MB |
+| threadpoolctl | 56KB |
+| **Total** | **~94MB**, on top of the Pyodide runtime itself |
+
+**Decision: default to pre-computed output, not live per-student loading.** ~94MB is not something to ask 30 students to pull simultaneously over school wifi mid-lesson — and this unit sits right before the HSC exam, which is the worst possible time for a live demo to stall or fail in front of a class. So the demo blocks in L3–L5 (§5) ship with **pre-computed Scikit-learn output baked into the page at build time** (same fit/predict calls, same real numbers, computed once rather than per-visit) driving the animated visualisations in §3. This still satisfies "students see and manipulate real Scikit-learn output" — the manipulation is against real, correct output, just not recomputed live in-browser for every input tweak.
+
+A **secondary, clearly-labelled "Run it live in your browser" opt-in button** stays available on the same demo blocks for any student who wants to verify the numbers themselves — this uses the validated `spike/validate-sklearn.mjs` approach directly, with an explicit file-size warning before it downloads anything. Opt-in, not default.
+
+## 3. Dataset and visualisation elements
+
+**Dataset unchanged:** reuse **Coastline Adventures** (LoFiFlask's running example) — continuity, familiar domain, concrete framing for every regression/classification example. No new SQL/ORM content introduced.
+
+**Governing UX principle for every demo block: step through, don't just run.** No demo in this unit is a single "Run"/"Submit" button that computes and dumps a final result — that turns the algorithm back into a black box, which is exactly what students need to *not* experience given they're never implementing these algorithms themselves (§1). Instead every demo is a **student-paced sequence of discrete, meaningful stages** — Prev/Next controls, click-to-reveal, or a slider with fixed stops the student moves themselves — so they see and control each conceptual step, not just the outcome. Lesson 1's clickable MLOps diagram already does this correctly (three stages, click each one, no auto-play) and is the reference pattern every other demo below should match. Where the table below says "animated," read that as "stepped and reader-paced," not "plays automatically" — e.g. L3's line-of-best-fit is revealed one step at a time on Next (raw points → fitted line appears → pick an x value → prediction marked and compared to a known point), not a single animation that plays through unprompted.
+
+**Three more governing rules, learned the hard way rebuilding L3 after review (apply to L4/L5's regression/classification demos too):**
+- **Use genuinely noisy example data, never a suspiciously perfect fit.** A dataset engineered so the model's line/boundary touches every single point looks rigged to a skeptical student and actively teaches the wrong idea — that these algorithms find a *perfect* fit rather than a *best* fit. Pick data with real scatter, and call out at least one visible residual/misclassification explicitly (e.g. "the model predicts $350.48 here; the real training value was $335 — that's normal, the line isn't a lookup table").
+- **"Run this exact code" must mean it literally.** If a live-run/verify feature exists, the code it actually executes must be byte-for-byte identical to the code shown in the static steps — never a separately-formatted summary string. A mismatch (different output formatting, unexplained floating-point noise from indexing a scalar out of an array, no visible `print()` for output that appears anyway) reads as the tool lying about what it's doing, which undermines the entire "these are real Scikit-learn numbers" premise this unit depends on (§2).
+- **Tinker with the input, never the model.** Students will want to poke at these demos, and that's a good instinct to serve, not shut down — but per §1's boundary, the thing that must stay fixed and given is the trained model/algorithm itself, never the input to it. L3 added a "try your own Group Size" number field: the fitted equation (real Scikit-learn coefficients, computed once) stays constant, but the student can type any value and watch the prediction, the marker on the chart, and an interpolation/extrapolation warning update live — using plain JS arithmetic with the real fitted coefficients so it's instant, not a 90MB reload per keystroke. The "Run it live" opt-in additionally re-verifies the student's *current* typed value with real Scikit-learn (appended as one more `print()` line, clearly labelled as the student's own addition rather than pretended to be part of the static "exact code"). Out-of-range values are handled honestly: the chart marker clamps to the visible edge rather than disappearing, and the extrapolation warning explains why the number shown is a guess, not a trustworthy prediction — turning "what happens if I try something silly" into the lesson's own point about extrapolation risk.
+
+**New — visualisation elements to build, so the ML content is seen, not just read about:**
+
+| Element | Where it's used | What it shows |
+| --- | --- | --- |
+| Looping 3-stage MLOps diagram, clickable | L1, L8 | Design → Model development → Operations, arrows looping back exactly as the spec diagram does; clicking a stage expands its bullet points (built — the reference pattern) |
+| Stepped data-investigation walkthrough | L2 | Coastline Adventures sample data, revealed step by step: meet the raw table → the label column highlighted → the feature columns highlighted → the business problem reframed as an ML problem (built) |
+| Stepped line-of-best-fit | L3 | Scatter of coastal data, stepped: raw points → fitted line appears → student picks an x value → prediction marked and sanity-checked against a known point (not a literal re-implementation of gradient descent — the *result* is real Scikit-learn output, per §2) |
+| Linear vs polynomial curve toggle | L4 | Same scatter, a degree control the student steps through (not a continuous auto-animating slider) overlays a polynomial curve against L3's line for direct comparison |
+| Stepped decision-boundary walkthrough | L5 | Shaded "predicted busy / predicted quiet" regions either side of the logistic regression threshold; student steps the threshold through fixed stops and sees specific points flip category |
+| Node-and-edge network diagram, training | L6 | Matches the spec's own diagram; student steps through training-exposure stages (not a continuous slider) watching connections thicken stage by stage |
+| Node-and-edge network diagram, execution | L7 | Same diagram, student steps a single input through each layer to the output one stage at a time, using the trained weights from L6 |
+| Stepped end-to-end pipeline walkthrough | L8 | Steps through L2 → L3–5 → L6–7 → a deployment icon → a small monitoring-dashboard mockup, one stage per Next click, for one coastal example |
+| Biased-sample comparison view | L9 | Same decision-boundary visual as L5, stepped side by side against a skewed subset of coastal data, showing how the prediction shifts unfairly stage by stage |
+| Verb-order badge system | All lessons, L10 especially | Every modelled question carries a colour-coded badge (see §4) showing whether it's low/mid/high-order — same visual language used consistently everywhere so students learn to read it at a glance |
+
+## 4. NESA key-word coverage (the exam-technique spine of this unit)
+
+Source for the 35 key words and their definitions: Matrix Education's *"How to Respond to NESA Key Words to Ace Your HSC"* — used as the bible per your instruction. All **35** are covered at least once across Lessons 1–9, each attached to a modelled question-and-answer pair in that lesson's theory block. Lesson 10 is a full consolidation paper reusing all 35.
+
+**Marks and band language are no longer assumed — they're calibrated against the actual *2025 HSC Software Engineering Marking Guidelines*** (NESA, `nsw.gov.au/sites/default/files/noindex/2025-12/2025-hsc-software-engineering-mg.pdf`), specifically its mapping grid (p.17), which tags every question by focus area and syllabus outcome. One caveat worth stating plainly: this document is the *marking guidelines*, not the original *question paper* — so the exact command-verb wording of each question isn't 100% certain. What's certain is the mark value and the criteria ladder's own language, which NESA writes to mirror the question's command verb closely; the mappings below treat that as strongly-evidenced inference, not verbatim-confirmed.
+
+### 4.1 What the 2025 paper actually asked under Software Automation
+
+Six questions carried the "Software automation" tag (mapping grid, p.17):
+
+| Q | Marks | Content | Criteria ladder (bottom → top) |
+| --- | --- | --- | --- |
+| 3 | 1 | ML training (supervised learning) | Single band: "Identifies the correct answer" |
+| 11 | 1 | DevOps key principles | Single band: "Identifies ALL the items" (multi-select) |
+| 12 | 2 | Logistic regression / classification suitability (true–false grid across 6 scenarios) | 1: correct for FOUR of six · 2: correct for ALL SIX |
+| 24 | 5 | AI safety-monitoring system — impact on workers | 1: some relevant info · 2: outlines ONE way OR identifies some ways · 3: outlines some ways · 4: outlines BOTH positive AND negative ways · 5: comprehensive discussion **with reference to the scenario** |
+| 25 | 5 | Neural network inside a virtual personal assistant | 1: some relevant info · 2: outlines a feature OR impact, OR identifies features AND/OR impacts · 3: outlines features AND/OR impacts · 4: explains how the NN supports the assistant, OR outlines it + one impact · 5: explains how the NN supports the assistant **AND** includes one positive **AND** one negative impact |
+| 27 | 6 | Human bias in AI (video stimulus) | 1: some relevant info · 2–3: identifies sources/examples of bias AND/OR effects AND/OR outlines how AI learns · 4: outlines how bias affects AI + refers to the video · 5: describes how bias affects AI + refers to the video · 6: explains how bias affects AI **AND supports the answer with reference to the video** |
+
+The pattern across every multi-band Automation question is the same, and it's the single most important thing to teach this close to the exam: **the top band always needs the highest verb *and* explicit application to the given scenario/stimulus.** Q24 and Q27 both name this outright ("with reference to the scenario" / "with reference to the video") — a technically correct general answer that never touches the given context is structurally capped below full marks, regardless of how sophisticated it sounds.
+
+**Q25 in more detail (checked against the actual 2025 exam content, not just the marking guidelines' criteria table)** — this is what Lessons 6–7's theory cards are calibrated against: the scenario is a virtual personal assistant used by an **airline**, and the question asks students to explain how a neural network would interact with the assistant, including one positive and one negative impact for customers or the airline. The released sample answer: the network recognises natural-language patterns to categorise common support queries (its own example: lost luggage) and uses its nodes to help process them; for impact, staff may come to rely on its recommendations and lose familiarity with emerging query trends, while customers may come to expect faster, more precise service, raising the standard expected of human staff too. Lesson 3's worked Explain example was already modelled on this question's shape (a Coastline Adventures chatbot, mechanism + one positive + one negative impact) — Lessons 6 and 7 extend the same real scenario shape into the training-cycle/execution-cycle content specifically, rather than introducing an unrelated example.
+
+**Lessons 6–10: no runnable code, animated/stepped SVG diagrams instead.** Per §1, neural networks are diagram-only in the course specification — no code is given anywhere, and students are not expected to run or interpret real neural-network code the way they interpret real Scikit-learn output in Lessons 3–5. From here on, the demo block in every remaining lesson is an animated or stepped SVG diagram (extending L1's clickable MLOps loop pattern), never a code block with a "Run it live" opt-in — there is no Pyodide/Scikit-learn dependency in Lessons 6–10 at all.
+
+### 4.2 The paper-wide banding convention (generalised beyond Automation, since it alone doesn't produce a 3- or 4-mark exemplar)
+
+The rest of the 2025 paper shows two distinct ladder shapes, and it matters which one applies:
+
+- **Knowledge-verb ladder** (identify → outline → describe/explain, used for anything asking students to explain/discuss/justify a concept): overwhelmingly the canonical **3-mark shape** across the paper — Q15b, Q16a, Q16b, Q16c, Q18, Q20, Q22, Q23a, Q23b all follow *1 = identifies ONE/some info, 2 = outlines ONE (or identifies TWO), 3 = top verb (describes/compares/explains/outlines relevant issues)*. This is the shape Lesson 1's Identify/Outline/Describe/Classify sequence is built to rehearse directly.
+- **Artefact-construction ladder** (build a query/algorithm/diagram/program): a *completeness-against-requirements* ladder, not a verb ladder — Q17 (pseudocode), Q19 (Python), Q21 (SQL, 4 marks), Q22 (class diagram), Q26 (Python, 5 marks) all mark on how many stated requirements the artefact correctly satisfies. **This unit doesn't use this ladder** — per §1's boundary, students never author the ML code/algorithm itself, so nothing in this unit should be marked this way. Worth telling students explicitly in Lesson 10 so they don't get confused seeing it elsewhere in the paper.
+- **No 4-mark knowledge-verb exemplar exists in 2025** (the only 4-mark question, Q21, is artefact-construction). Where this unit needs a 4-mark knowledge item, the ladder is a reasoned interpolation between the evidenced 3-mark and 5-mark shapes — flagged as such wherever it's used, not presented as if directly evidenced.
+
+### 4.3 Two axes per verb: Marks, and Target Band
+
+**Marks** — grounded in §4.1/§4.2, not assumed:
+
+| Verb group | Typical marks | Evidence basis |
+| --- | --- | --- |
+| Identify, Define, Recall, Extract, Classify, Recount | 1 (standalone), or the bottom rung of any longer ladder | Direct: Q1–Q8, Q10, Q11, Q14 are all 1-mark "identifies" questions |
+| Outline | 2–3, occasionally the top rung of a 3-mark item | Direct: Q12 (2), Q15b/16a/16b (3, as top rung) |
+| Describe, Compare, Distinguish, Contrast, Construct (diagram, not code) | 3 (canonical top rung) | Direct: Q16a, Q16c, Q20, Q22 |
+| Explain | **elastic — 3 to 6**, depending on whether the question also demands impact/scenario integration | Direct: Q18 (3, standalone) · Q25 (5, + one pos/neg impact) · Q27 (6, + stimulus reference) — the widest-ranging verb in the paper; mark value tracks task complexity, not the word itself |
+| Evaluate, Justify, Assess, Critically (analyse/evaluate), Synthesise | 5–6, always requiring both a position/two-sided treatment *and* explicit scenario/stimulus reference for full marks | Direct: Q24 (5), Q27 (6) — the two highest-value Automation questions in the paper |
+| Everything else assigned in this unit (Investigate, Interpret, Apply, Predict, Calculate, Analyse, Deduce, Extrapolate, Account for, Summarise, Appreciate, Recommend, Propose, Discuss, Clarify, Demonstrate) | 2–4, inferred by analogy to the nearest evidenced verb of comparable cognitive demand | Inferred — no direct 2025 Automation exemplar; treated as estimates, not claims |
+
+**Target Band** — a second, independent axis: which NESA course performance band (1–6) correct handling of this verb-type typically *differentiates*. This is a design choice (the band-differentiation framing Matrix itself coaches with), not a verbatim NESA table — stated plainly so it isn't mistaken for official wording:
+
+- **Band 4 (baseline — secure it, but it doesn't separate you from the pack):** Identify, Define, Outline, Recall, Recount, Extract, Classify
+- **Band 5 (solid, connected reasoning):** Describe, Compare, Contrast, Distinguish, Discuss, Account for, Clarify, Summarise, Apply, Calculate, Demonstrate, Interpret, Examine, Deduce, Predict, Extrapolate, Analyse, Investigate, and *Explain at the 3-mark, standalone level*
+- **Band 6 (what actually separates the top band — sustained, evidence-integrated, both-sides, tied explicitly to the given scenario):** Evaluate, Justify, Assess, Critically (analyse/evaluate), Synthesise, Recommend, Propose, Appreciate, Construct (argument, not diagram), and *Explain when it's carrying a 5–6 mark extended response with scenario/stimulus integration* — this dual placement for Explain is deliberate, matching its evidenced elasticity in §4.1
+
+### 4.4 The Q&A card template — 8 fields, per your spec
+
+Every modelled answer in this unit uses the same eight-field card, so the pattern becomes as familiar as the content:
+
+1. **Verb** and **Target Band** (§4.3) — shown together as the card header
+2. **What they are asking you to do** — the verb's demand, explained in Matrix Education's own terms
+3. **Sample Question** — written in real HSC style, scenario-based against Coastline Adventures where the evidenced pattern calls for a scenario
+4. **Model answer** — the full response
+5. **Why this meets the demands of the question** — ties the model answer's structure explicitly back to the real marking-criteria pattern it's modelled on (named, e.g. "matches 2025 Q25's top band")
+6. **Marks for this type of question** — the number(s), from §4.3
+7. **Breakdown on how students get those marks** — the actual band-by-band ladder, reproduced in NESA's own criteria-table style
+8. (Fields 6–7 render together as a mark ladder, not two disconnected facts — see the worked examples below)
+
+**Two fully worked examples, calibrated directly against real 2025 criteria (not invented mark values):**
+
+> **Verb:** Identify — **Target Band:** 4
+> **What they're asking:** "Recognise and name" — the shortest-answer command word on the whole list. Give the term; reasoning isn't credited.
+> **Sample Question:** *A team feeds a machine learning model a dataset of past Coastline Adventures bookings, where each booking is already labelled as either "completed" or "cancelled." Identify the type of machine learning training being used.*
+> **Model answer:** Supervised learning.
+> **Why this meets the demands:** One correct term, nothing else — this is exactly 2025 Q3's shape, whose entire criteria table is "Identifies the correct answer" for 1/1. No partial credit tier exists for this question type.
+> **Marks:** 1. **Breakdown:** 1/1 — Identifies the correct answer. (No lower band; either the term is right or it isn't.)
+
+> **Verb:** Explain — **Target Band:** 6 (at this mark value)
+> **What they're asking:** "Relate cause and effect; make relationships evident; provide why and/or how" — but at 5 marks, evidenced practice (2025 Q25) shows NESA also expects impact/evaluation content bundled into the same response, not mechanism alone.
+> **Sample Question:** *A Coastline Adventures chatbot uses a neural network to recommend a tour package based on a customer's browsing history. Explain how the neural network supports this recommendation function. In your answer, include one positive and one negative impact of using this chatbot.* (5 marks)
+> **Model answer:** The network's nodes recognise patterns in browsing behaviour — pages viewed, time spent, past bookings. During training, the connections most strongly associated with particular tour categories are weighted more heavily; at execution time, the network weighs those same connections against a new customer's browsing pattern to output a recommended package. Positive impact: customers get fast, relevant suggestions without needing staff availability. Negative impact: a customer with an unusual browsing pattern the network wasn't well-trained on may get a poor recommendation, and staff who rely on the chatbot's suggestions may lose familiarity with handling atypical requests themselves.
+> **Why this meets the demands:** Mirrors 2025 Q25's top band exactly — explains the mechanism *and* includes one positive *and* one negative impact. Both halves are required; explaining the mechanism alone caps this at 4/5 under the real criteria.
+> **Marks:** 5. **Breakdown:** 5 = explains the mechanism AND one positive AND one negative impact · 4 = explains the mechanism alone, OR outlines it plus one impact · 3 = outlines features AND/OR impacts · 2 = outlines one feature/impact, or identifies several · 1 = some relevant information. (Reproduced from 2025 Q25's actual criteria table, terms swapped for this scenario.)
+
+Every one of the 35 verbs gets this eight-field treatment, each grounded in §4.3's marks/band and, wherever a direct 2025 exemplar exists, explicitly named as the model.
+
+**Lesson-by-lesson verb assignment** (each verb appears once in Lessons 1–9; Lesson 10 is a revision-notes consolidation, not a 10th verb set), now with marks and Target Band:
+
+| Lesson | Content | Verbs (Marks / Target Band) |
 | ---: | --- | --- |
-| 1 | What Is Automation? | Scripting vs "true" ML/AI — the distinction the syllabus draws; what a program that "learns" actually means |
-| 2 | Data In, Decisions Out | Loading a small dataset (reusing Coastline Adventures data?), inspecting it, framing a prediction problem |
-| 3 | Teaching a Program to Guess | A first, simple model (e.g. linear regression) — fit, predict, and why that's different from an `if`/`else` rule |
-| 4 | Training and Testing | Splitting data into training/test sets; what "learning from data" actually measures |
-| 5 | Classification | A classifier (e.g. logistic regression or decision tree) on a simple two-outcome problem |
-| 6 | Measuring Success | Accuracy and its limits; a first honest look at a confusion matrix |
-| 7 | When Models Get It Wrong | Overfitting, bias in training data — tying back to Secure Software Architecture's ethics/impact content |
-| 8 | Automating a Real Task | A small end-to-end script: load data, train, predict, act on the result |
-| 9 | Limits and Responsible Use | What ML/AI can't or shouldn't be trusted to do; cross-link to Secure Software Architecture L10 (ethics/impact) |
-| 10 | Capstone | An open brief, same style as LoFiFlask L10 — apply the whole toolkit to a new small dataset |
+| 1 | MLOps: the three stages | Identify (1/B4), Outline (2–3/B4), Describe (3/B5), Classify (1/B4) |
+| 2 | Coastline data → a prediction problem | Investigate (3–4/B5), Extract (1/B4), Define (1/B4), Clarify (3/B5) |
+| 3 | Linear regression (code demo) | Interpret (3/B5), Apply (3/B5), Predict (2–3/B5), Calculate (2/B5) |
+| 4 | Polynomial regression | Compare (3/B5), Contrast (3/B5), Distinguish (3/B5), Examine (3/B5) |
+| 5 | Logistic regression / classification | Analyse (3–4/B5), Deduce (3/B5), Extrapolate (3/B5), Account for (3/B5) |
+| 6 | Neural networks — training cycle | Explain (3/B5), Construct (3/B6), Recount (1/B4), Summarise (2–3/B5) |
+| 7 | Neural networks — execution cycle | Demonstrate (3/B5), Appreciate (4–5/B6), Assess (5–6/B6), Propose (4–5/B6) |
+| 8 | MLOps end to end | Discuss (3–5/B5), Recommend (4–5/B6), Synthesise (5–6/B6), Critically (analyse/evaluate) (6/B6) |
+| 9 | Limits, bias, responsible automation | Evaluate (5–6/B6), Justify (5–6/B6), Recall (1/B4) |
+| 10 | Capstone: revision notes | No new verbs — a table/checklist consolidating each lesson's `.notes-prompt` row |
 
-## 4. Pre-build checklist for next session
+## 5. Lesson structure — 50% code demo / 50% theory, reversed palette
 
-- [ ] Read the actual NESA syllabus content page for Software automation; transcribe real dot points
-- [ ] Confirm which Year 12 outcomes (SE-12-02, 03, 06, 08 assumed — confirm) this focus area primarily addresses
-- [ ] Run the Pyodide + scikit-learn feasibility spike (§2); record load time and package size
-- [ ] Decide fallback approach if scikit-learn is impractical in-browser
-- [ ] Decide on a dataset — reuse Coastline Adventures (continuity with the rest of the suite) or introduce a new one better suited to ML framing
-- [ ] Confirm repo name (`lofiautomation` assumed) and initialise it the same way `lofiflask` was: `git init`, spike folder first, IDE scaffold second, lesson content last
-- [ ] Revise the 10-lesson draft above once real dot points are confirmed
-- [ ] Add this unit to `HSC_Software_Engineering_Scope_and_Sequence.md` and `HSC_Software_Engineering_Program.md` once built, replacing the "planned" status
+Every lesson (not just some) follows the same two-block template, so the demo/theory split is consistent and the visual cue does real work. House style for the intro, locked after L1/L2: the `.lesson-intro` heading reads **"What You're Learning"** (not "Why this lesson" — states the learning objective directly, not a justification for it), and `.demo-hint` caption text renders at the same size as the intro paragraph (16px), not as small print — it's often carrying real content (e.g. reading a pattern off a highlighted table), not a throwaway aside.
+
+1. **Demo block (standard site theme — the existing synthwave palette).** A pre-set, runnable code fragment or interactive visualisation (§3) that students run and tweak inputs on. No student-authored ML code, per the boundary in §1. For L3–L5 specifically, the fit/predict output driving the visualisation is **pre-computed at build time** (per §2's spike result — 94MB of scipy/scikit-learn is too heavy to load live for a full classroom), with an opt-in "Run it live in your browser" button offering the same validated Pyodide path for students who want to verify it themselves.
+2. **Theory block (reversed palette).** The lesson's assigned key words (§4), each as a modelled question-and-answer pair with its order badge. Deliberately inverted colours — light background where the demo block is dark, dark text/accents where the demo block is light — so the visual mode-switch itself signals "this is exam-answer training, not the tool" before a student reads a word of it. Applies site-wide to every theory block, including the capstone (L10, which is theory-block-only, so it renders in the reversed palette by default).
+3. **"Your notes" prompt (standard theme, closes the lesson).** No digital progress-tracking — students won't use tick-boxes on screen, so there isn't one. Instead every lesson ends with a prompt to write one row of their own handwritten notes, in the same format used across this whole unit's hybrid-learning model: **Unit | Topic | Statement | Explain | Tools/Processes | Impact/Pros/Cons**. The prompt names which part of that lesson's demo/theory content feeds each column, so it's a genuine study aid, not a decorative afterthought. Online content plus handwritten notes is the expected combination for this course — not a replacement for either.
+
+This replaces the earlier draft's "debugging checkpoint" stage — there's no student-authored code to debug — with the theory block's modelled Q&A doing the reinforcement work instead. It also replaces an earlier "digital checklist" idea (localStorage tick-boxes per verb) — cut entirely once it was clear students would default to the required handwritten notes instead, not a screen checklist.
+
+| # | Lesson | Demo block | Theory block (reversed palette) |
+| ---: | --- | --- | --- |
+| 1 | What Automation Means Here | Clickable looping MLOps diagram | Identify / Outline / Describe / Classify — modelled Q&A |
+| 2 | From Coastline Data to a Prediction Problem | Feature/label colour-coded data table | Investigate / Extract / Define / Clarify |
+| 3 | Teaching a Program to Guess: Linear Regression | Spec's own `LinearRegression` snippet + animated line-of-best-fit | Interpret / Apply / Predict / Calculate |
+| 4 | Curved Relationships: Polynomial Regression | Linear vs polynomial curve toggle | Compare / Contrast / Distinguish / Examine |
+| 5 | Sorting Into Categories: Logistic Regression | Decision-boundary visualisation | Analyse / Deduce / Extrapolate / Account for |
+| 6 | Inside a Neural Network: Training Cycle | Animated node diagram, training slider | Explain / Construct / Recount / Summarise |
+| 7 | Inside a Neural Network: Execution Cycle | Same diagram, execution pulse trace | Demonstrate / Appreciate / Assess / Propose |
+| 8 | Putting MLOps Into Practice | End-to-end pipeline animation | Discuss / Recommend / Synthesise / Critically (analyse/evaluate) |
+| 9 | Limits, Bias and Responsible Automation | Biased-sample comparison view | Evaluate / Justify / Recall — cross-link to Secure Software Architecture L10 |
+| 10 | Capstone: Your Revision Notes | None — no new content, no mock exam | A consolidated table/checklist of the notes a student should already have from Lessons 1–9 (the Unit/Topic/Statement/Explain/Tools-Processes/Impact-Pros-Cons row from every lesson's `.notes-prompt`, gathered in one place), so it's a revision aid, not another thing to learn |
+
+## 6. Pre-build checklist
+
+- [x] Real dot points transcribed and read as a boundary document (§1)
+- [x] Outcomes confirmed (SE-12-01, 03, 05, 06)
+- [x] Dataset confirmed: Coastline Adventures, reused from LoFiFlask (§3)
+- [x] Visualisation elements specified per lesson (§3)
+- [x] Full 35-word NESA key-word list sourced (Matrix Education) and mapped 1:1 across Lessons 1–9, with Lesson 10 as a revision-notes consolidation, not a 10th verb set (§4)
+- [x] Marks and Target Band calibrated against real evidence: 2025 HSC Software Engineering Marking Guidelines (`nsw.gov.au/sites/default/files/noindex/2025-12/2025-hsc-software-engineering-mg.pdf`) read in full — 6 Automation-tagged questions extracted (Q3, 11, 12, 24, 25, 27) plus the whole-paper banding convention, both now driving §4.3's marks/band table instead of an assumed grouping (§4.1–§4.3)
+- [x] Q&A card redesigned to 8 fields (Verb, Target Band, "what they're asking," sample question, model answer, why it meets the demands, marks, marks breakdown) with two fully worked examples calibrated directly against real 2025 criteria (§4.4)
+- [x] 50/50 demo/theory lesson template locked, with reversed-palette rule for theory blocks (§5)
+- [x] Run the Pyodide + scikit-learn feasibility spike (§2) — `lofiautomation/spike/validate-sklearn.mjs`, passed correctness, ~94MB/~8.3s cold load recorded
+- [x] Decide fallback approach — confirmed: pre-computed output by default, opt-in live Pyodide run available (§2, §5)
+- [x] Repo initialised: `lofiautomation` at `/Users/administrator/Documents/lofiautomation`, `git init`, default branch renamed to `main`, `spike/` created with `package.json` (pyodide dep) and `validate-sklearn.mjs`
+- [x] Site scaffold built: `assets/style.css` (shared dark theme + the reversed-palette `.theory-block` system + `.verb-badge` low/mid/high classes + `.notes-prompt`), `assets/site.js` (mobile sidebar toggle only — no progress-tracking, see §5), `index.html` hub, `lesson-01.html` fully built as the reference implementation (clickable MLOps loop demo + 4 modelled 8-field key-word answers + a "Your notes" close), `lesson-02.html`–`lesson-10.html` generated as structural stubs via `tools/generate-stubs.mjs` carrying their locked demo/verb/marks/band assignments.
+- [x] Two real contrast bugs caught and fixed during Playwright verification, both the same root cause (a single-class colour rule losing to `main.lesson-main p`'s higher-specificity 1-class-+-2-type selector): checklist labels, then later the Sample Question/Model Answer text in the new 8-field cards. Fixed by scoping every `.theory-block`-internal `<p>` colour rule to 2+ classes — documented inline in `style.css` so it isn't reintroduced.
+- [x] Removed the digital per-verb checklist entirely (localStorage tick-boxes, sidebar "complete" checkmarks) — students won't use it. Replaced with a `.notes-prompt` component closing every lesson, prompting the required handwritten note row (Unit/Topic/Statement/Explain/Tools-Processes/Impact-Pros-Cons — the format used across this whole hybrid-learning suite) and naming which part of that lesson feeds each column.
+- [x] Lesson 2 built (`lesson-02.html`, `run: false` in `generate-stubs.mjs`): a 4-step stepper (meet the data → label highlighted → features highlighted → business problem reframed as an ML problem) plus 8-field cards for Investigate/Extract/Define/Clarify. Also fixed a real bug in `generate-stubs.mjs`'s `sidebar()` while rebuilding this — a string-replace approach for the active-link class was leaving a stray, invalid second `class="__active__"` attribute in every generated stub; rewritten to build the class list directly. Verified with Playwright (`spike/lesson02-check.mjs`): step Prev/Next state, button relabelling on the last step, and the highlighted-column rendering all confirmed correct.
+- [x] Lesson 3 built (`lesson-03.html`, `run: false` in `generate-stubs.mjs`), then substantially revised after user review caught two real problems with the first version — both worth recording since they'll recur in L4/L5's similar demos:
+  - **The data was too clean.** The first version used the course spec's own x-values with a perfectly noise-free `Total Spend = 75×GroupSize+50` relationship, so the fitted line passed through every single point — which reads as rigged/fake to a skeptical student and, worse, teaches the wrong idea (regression finds a *perfect* fit, not a *best* fit). Replaced with genuinely noisy data (`total_spend = [215,335,510,625,805,940,1120,1230]`); the real fit (verified via `spike/lesson03-recompute.mjs`) is `Total Spend ≈ 74.405×GroupSize + 52.857`, and critically, `predict([[4]])` now gives $350.48 against a real training value of $335 — a visible $15.48 residual, called out explicitly as "best fit, not a lookup table."
+  - **The live-run output didn't match what was shown as "the exact code."** The original JS built a separate f-string sentence server-side that looked nothing like the code snippets shown per step (different formatting, and indexing a scalar out of the array surfaced raw floating-point noise like `350.00000000000006` with no explanation) — a student clicking "run this exact code" got output that didn't resemble the code they'd just read, with no visible `print()` anywhere. Fixed by making the live-run's Python source **byte-for-byte identical** to the code shown in Steps 2/4/5 (wrapped only in a `sys.stdout` capture, not reformatted), and added a new Step 3 explaining the `[[4]]` double-bracket shape (outer = list of samples, inner = feature values per sample, colour-coded) plus explicit prose in Step 4 explaining why nothing printed before that point (Python needs `print()`; unlike a notebook cell, it doesn't auto-display the last expression). Also caught and fixed a genuine arithmetic error in the original Predict theory card (was computing 75×9+50 as 650 instead of 725). Re-verified end-to-end: the live browser run's captured stdout now matches the static steps exactly, character for character (`predict([[4]]) = 350.48` / `predict([[5]]) = 424.88`, confirmed via `spike/lesson03-check2.mjs`).
+  - Demo is now 5 steps: raw (visibly non-linear-looking) points → best-fit line appears → bracket-shape literacy → a known point's residual explained → a genuine new prediction (interpolation, foreshadowing L9's extrapolation content). Theory cards (Interpret/Apply/Predict/Calculate) updated to use the real fitted coefficients throughout.
+  - **Added after further review: a "try your own Group Size" tinker input** (§3's third governing rule) — students can type any value and watch the prediction, chart marker, and interpolation/extrapolation warning update live, and "Run it live" additionally verifies whatever they've typed with real Scikit-learn. Caught one more real bug while wiring this up: the live-run's output-splitting line used `.split('\\n')` (a literal two-character `\n` string) instead of `.split('\n')` (an actual newline) — silently "worked" for two lines only because the CSS's `white-space:pre-wrap` visually rendered the un-split, still-multi-line text as if it were separate lines, but broke the moment a third line (the tinkered value) needed to be conditionally appended, since `lines.length` was always 1. Fixed and re-verified (`spike/lesson03-tinker-check.mjs`): output now genuinely splits into separate lines, and the tinkered-value line correctly appears only when present.
+- [x] Lesson 4 built (`lesson-04.html`, `run: false` in `generate-stubs.mjs`): linear-vs-polynomial comparison on Lesson 3's same eight bookings. Real coefficients computed via `spike/lesson04-recompute.mjs` (degree 2) and `spike/lesson04-degree3.mjs` (degree 3, which throws up a genuinely useful teaching moment — predicting Group Size 40 gives &minus;$218.45, a real negative-spend nonsense result that makes the extrapolation-risk point far more concretely than L3's milder case). Demo: a persistent SVG (dashed linear reference + a sampled-polyline curve, same technique note as `.plot-wrap`'s CSS comment) through 5 steps — recap the line, reveal the degree-2 curve, a discrete degree-1/2/3 toggle (buttons, not a slider) with an in-range comparison table, an out-of-range table exposing the degree-3 blowup, then a tinker box combining a degree selector with the Group Size input. Theory cards: Compare/Contrast/Distinguish/Examine, all 3 marks/Band 5, all built around the same real numbers.
+  - **Caught by user review, same review pass:** the copy was written too densely/academically for a 17-year-old reader. Rewrote the intro and every step's explanatory text around one sustained real-world analogy — a stiff ruler (degree 1, can't bend) vs a bendy ruler (degree 2/3, bends once or twice) — and added a `.glossary` component (new CSS component, sits between the demo and theory blocks) defining Coefficient/Intercept/Degree/Polynomial/Interpolation/Extrapolation/Training data in plain English before the theory block's denser exam-register prose leans on them.
+  - **Also caught: the theory block named Scikit-learn/`PolynomialFeatures`/`LinearRegression` directly inside modelled exam answers.** Fixed — those names now only appear inside actual code blocks and the live-run status text, never inside a Q&A card's model answer, since the syllabus doesn't examine framework-specific knowledge (same "no specific framework" principle noted in §1). This is worth checking for on every remaining lesson's theory block, not just L4's.
+  - Verified with Playwright (`spike/lesson04-check.mjs`): degree toggle redraws the curve and updates the in-range table correctly for all three degrees, the tinker box's degree-3/Group-Size-40 combination correctly shows the negative-spend warning and hides it again for an in-range value, zero JS/console errors.
+  - **Second review pass, same lesson:** still too thin/confusing even after the first simplification pass. Fixed with three additions, all worth carrying into L5 onward:
+    - A **static degree-shape legend** (new `.degree-legend` component, three small illustrative SVGs with no real data — a straight line, a one-bend arch, a two-bend S-shape) placed before the interactive demo, so "degree" has a plain visual meaning before real numbers get attached to it.
+    - A **numbered "How this actually works — the steps" procedure** (new `.process-steps` component, cyan-accented) between the intro and the demo — six explicit steps (start with real bookings → choose a degree → reshape Group Size → fit the model → use it to predict → check against a known value), each grounded in real Coastline figures. This directly rehearses the "describe the steps" exam-answer shape, which is the actual reason this was requested — not just for clarity, but so students can reproduce the procedure in their own words under exam conditions.
+    - **Every step-panel's `demo-hint` substantially lengthened**, walking through more slowly with explicit sequencing language ("First... then... finally...") instead of compressing each idea into one dense sentence, and grounding every claim in a specific real number rather than some steps having numbers and others staying abstract.
+    - Re-verified with the same `spike/lesson04-check.mjs` after these changes — all functional checks still pass, zero JS errors.
+- [x] Lesson 5 built (`lesson-05.html`, `run: false` in `generate-stubs.mjs`): logistic regression as "sorting into categories" rather than guessing a number. New scenario, same dataset family — ten real bookings (Days Ahead the booking was made vs whether the customer actually Attended), fitted with a real `LogisticRegression` (`spike/lesson05-recompute.mjs`: coefficient 0.244, intercept &minus;1.901, decision boundary at Days Ahead &asymp; 7.8; `spike/lesson05-thresholds.mjs`: 8/10 correct at threshold 0.5, 8/10 at 0.3 (different two wrong), 6/10 at 0.7 — a genuine, non-monotonic trade-off, not manufactured). Applied every L4 review lesson from the start rather than fixing them after the fact:
+  - A static, data-free S-curve legend diagram before the real demo, showing what the sigmoid shape and its 0.5 threshold line mean in general.
+  - A six-step numbered "How this actually works" procedure grounded in real Days-Ahead/Attended figures, rehearsing the describe-the-steps exam shape.
+  - Length/pacing matching L4's second pass, not its first.
+  - A lesson-specific glossary (Classification, Probability, Threshold, Decision boundary, Misclassification).
+  - Theory-block model answers kept generic — no Scikit-learn/class names, only inside actual code blocks.
+  - Demo: a real persistent SVG plot (data points at their true 0/1 outcome, coloured green/pink for correct/wrong at the current threshold; a dashed threshold line; the fitted S-curve) through 5 steps — meet the ten bookings, fit the curve, apply the default threshold with a worked 3-row example, a discrete 0.3/0.5/0.7 threshold toggle with a live per-booking table and correct-count summary, then a tinker box combining a threshold selector with a Days Ahead input. Theory cards: Analyse/Deduce/Extrapolate/Account for (Analyse at 3–4 marks/Band 5, matching its confirmed elastic marking in §4.3; the others 3 marks/Band 5).
+  - **One real bug caught and fixed during verification:** the new `.point-correct`/`.point-wrong` circle classes were silently losing to the pre-existing `.reg-plot .data-points circle{fill:...}` rule from L3/L4 — same specificity trap as the L3 contrast bugs (a less-specific new selector losing to an existing one), just this time between two rules of mine rather than a rule vs. a bare `<p>`. Fixed by matching the existing rule's exact selector shape (`.reg-plot .data-points circle.point-correct`) rather than a shorter one. **Worth a standing check on every future lesson that reuses `.reg-plot`/`.data-points`:** any new per-point styling needs to match or exceed that selector's specificity, not just add a class.
+  - Verified with Playwright (`spike/lesson05-check.mjs`): 10 points render, threshold toggle updates the table/summary/point colours correctly for all three thresholds (matching the precomputed 8/10, 8/10, 6/10 figures exactly), tinker box's Days Ahead 9 and 60 give the expected probability and extrapolation warning, zero JS errors.
+- [x] Lesson 6 built (`lesson-06.html`, `run: false` in `generate-stubs.mjs`): the first lesson with no Pyodide/code demo at all, per the "Lessons 6–10: no runnable code" rule (§4.1). Scenario: the Coastline Adventures chatbot's neural network, extending the same real 2025 Q25 shape (virtual personal assistant, mechanism + impact) that Lesson 3's Explain card was already modelled on. Applied every L4/L5 review lesson from the start:
+  - A static single-node illustration (new inline SVG using the existing `.degree-legend-block`/`.degree-legend` wrapper, with two new small classes `.mini-edge`/`.mini-node`) — three input arrows combining into one node, producing one output arrow — establishing "what one node does" before the full network diagram.
+  - A six-step numbered "How this actually works" procedure grounded in a real training-example walkthrough (start untrained → feed a labelled example → compare to the correct label → strengthen the correct-path connections → repeat across many examples → stop once reliable), rehearsing the describe-the-steps exam shape.
+  - A lesson-specific glossary (Node, Layer, Connection/weight, Training cycle, Labelled example).
+  - Theory-block model answers kept generic — no library/framework names (moot here since there's no code, but kept as a standing rule).
+  - Demo: a genuinely animated node-and-layer SVG diagram (new `.network-plot`/`.network-edge`/`.network-node`/`.network-label` classes) — 3 input nodes (excitement/family-kids/calm-relaxing), 3 hidden nodes, 2 output nodes (Adventure Tour/Family Tour), all 15 edges drawn once and left in place, with only `stroke-width` and a `.network-edge-strong` class toggled per step (not redrawn) to show connections thickening as training examples are stepped through. 6 steps: untrained network → training example 1 shown (`.training-example` new component) → adjustment drawn (edges toward the correct path visibly thicken) → two more examples processed → "after many more rounds" (fully trained state) → training stops, network is now fixed for Lesson 7. Theory cards: Explain (3/B5, modelled directly on 2025 Q25's mechanism-only shape since this question doesn't ask for impact), Construct (3/B6, a labelled diagram + justified layer order, inferred ladder), Recount (1/B4, the three layer names, direct 2025 1-mark shape), Summarise (2–3/B5, the full feed-compare-adjust-repeat cycle).
+  - **One real bug caught during Playwright verification (not a specificity trap this time — a viewBox sizing one):** the first version's input labels ("mentions excitement" etc.) and output labels ("Family Tour") were long enough to clip against the SVG's edges at the original `viewBox="0 0 400 260"` with nodes placed at x=90/210/330 — visually confirmed via a real screenshot, not just a code read. Fixed by widening the viewBox to `0 0 460 260`, shifting nodes to x=130/230/330, and shortening the input labels to drop the redundant "mentions" prefix (excitement/family-kids/calm-relaxing) — all label text now sits fully inside the viewBox at both edges, re-confirmed via a cropped `#networkPlot` screenshot at the untrained step and again at the first-adjustment step.
+  - Verified with Playwright (`spike/lesson06-check.mjs`): 15 edges + 8 nodes render, step label advances correctly through all 6 steps, strong-edge count increases step by step (0 → 4 → 8) and stays at 8 through the "many more rounds"/"stops" steps, last-step button relabels to "Restart ↻" and correctly resets to step 1, zero JS/console errors.
+- [ ] Lesson content for Lessons 7–10 (re-run `tools/generate-stubs.mjs` is only for stubs — once a lesson gets real content, hand-edit its file directly, set `run: false` for it in `LESSONS`, and stop regenerating it). **Keep applying from the start, not after review:** sustained analogy, static illustrative diagrams before the real demo, a numbered describe-the-steps procedure grounded in real numbers, a lesson glossary, no framework/library names in theory-block answers, no runnable code from L6 onward (animated/stepped SVG instead), and — new from L6 — after building any new animated SVG diagram, take a real cropped screenshot of it (not just a code read) to check label/edge clipping against the viewBox before calling it done.
+- [ ] Add this unit to `HSC_Software_Engineering_Scope_and_Sequence.md` and `HSC_Software_Engineering_Program.md` once built, noting its placement close to the HSC exam and its exam-technique emphasis alongside content coverage
+
+**Design constraint carried over from the rest of the LoFi suite:** these sites stay browser-hosted with no local install, specifically to route around NSW DoE network filters/install restrictions — that's the actual point of the suite, not an implementation detail. Combined with §1's boundary (students aren't expected to code these algorithms), this means the "Run it live" opt-in on L3–L5's demo blocks should stay a constrained "run this exact snippet, tweak an input value" control, not a free-text code editor (no CodeMirror here, unlike LoFiFlask where the syllabus does expect real student-authored code). If a student wants genuine coding practice beyond this unit, the answer is pointing them at installing VS Code themselves, not building more code-authoring surface into this site.
