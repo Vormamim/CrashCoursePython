@@ -11,7 +11,8 @@ const LESSONS = [
     theory: [
       {
         heading: "Variables & types",
-        explanation: "A variable is a named box that stores a value. Python figures out the type (text, whole number, decimal, true/false) from what you put in it, and you can change the value later by reassigning it.",
+        appliesTo: "TODO 1-3",
+        explanation: "On the mission console, a variable is a named box that stores a value — like a crew member's profile slot. Python figures out the type (text, whole number, decimal, true/false) from what you put in it, and you can update it later by reassigning it as the mission progresses.",
         code: `participant_name = "Ari"
 district = 4
 score = 12.5
@@ -63,18 +64,20 @@ print("TODO: complete Lesson 1 starter tasks.")
     theory: [
       {
         heading: "Input + conversion",
-        explanation: "input() always returns text (a string), even if the user types a number. Convert it with int() or float() before you do math with it.",
+        appliesTo: "TODO 1-2",
+        explanation: "The terminal's input() always hands back text (a string), even when a clue is a number. Convert it with int() or float() before you do any math with it, or the unlock calculation won't run.",
         code: `age_text = input("Age: ")
 age = int(age_text)
 print(age + 1)`
       },
       {
         heading: "Doing math with converted input",
-        explanation: "Once two inputs are converted to numbers, you can combine them with ordinary arithmetic to compute a result, like a score used to unlock something.",
-        code: `clue_a = int(input("Enter clue A: "))
-clue_b = int(input("Enter clue B: "))
-unlock_score = clue_a + (clue_b * 2)
-print(unlock_score)`
+        appliesTo: "TODO 3",
+        explanation: "Once both clues are converted to numbers, combine them with ordinary arithmetic to work out a result — the kind of combined reading a sealed terminal checks before it grants access.",
+        code: `signal_x = int(input("Signal X: "))
+signal_y = int(input("Signal Y: "))
+combined_signal = (signal_x * 3) + signal_y
+print(combined_signal)`
       }
     ],
     quiz: [
@@ -131,7 +134,8 @@ print("TODO: complete Lesson 2 starter tasks.")
     theory: [
       {
         heading: "if / elif / else",
-        explanation: "Branch your logic so code reacts to conditions. Python checks each condition in order and runs only the first block whose condition is True.",
+        appliesTo: "TODO 1",
+        explanation: "The placement system branches its logic so it reacts fairly to each traveller's scores. Python checks each condition in order and runs only the first block whose condition is True — everyone gets sorted by the same rule.",
         code: `power = 72
 if power >= 80:
     print("Elite")
@@ -142,12 +146,13 @@ else:
       },
       {
         heading: "Nested if (a decision inside a decision)",
-        explanation: "You can put another if inside an if block to check a more specific condition, but only once the outer condition is already True.",
-        code: `if power >= 80:
-    if logic >= 80:
-        print("Command Elite")
+        appliesTo: "TODO 2",
+        explanation: "You can put another if inside an if block to check a more specific condition — like whether a traveller who already cleared the outer gate also qualifies for an inner one — but only once the outer condition is already True.",
+        code: `if speed >= 80:
+    if fuel >= 80:
+        print("Afterburner ready")
     else:
-        print("Command")`
+        print("Standard boost")`
       }
     ],
     quiz: [
@@ -199,7 +204,8 @@ print("TODO: complete Lesson 3 starter tasks.")
     theory: [
       {
         heading: "Lists + index",
-        explanation: "Lists hold ordered items. Use indexes (starting at 0) to read or update positions.",
+        appliesTo: "TODO 1-2",
+        explanation: "The academy's team records live in a list — an ordered set of items. Use indexes (starting at 0) to read or update a team's entry before the dashboard refreshes.",
         code: `teams = ["Falcon", "Wolf", "Stag"]
 teams[1] = "Raven"
 print(teams[0])
@@ -207,7 +213,8 @@ print(len(teams))`
       },
       {
         heading: "Tuples (fixed groups of values)",
-        explanation: "A tuple is like a list but it can't be changed after it's created — good for values that belong together and shouldn't be edited, like a year and term.",
+        appliesTo: "TODO 3",
+        explanation: "A tuple is like a list but can't be changed once it's created — good for values that belong together and shouldn't drift, like a term and year stamped on the report.",
         code: `term_info = ("Year 1", "Term 2", 2026)
 print(term_info[0], term_info[2])`
       }
@@ -261,7 +268,8 @@ print("TODO: complete Lesson 4 starter tasks.")
     theory: [
       {
         heading: "Reading a traceback",
-        explanation: "When Python hits an error it stops and prints a traceback: the file/line where it happened, the line of code itself, and an error type + message at the bottom. Always read the last line first — it tells you what actually went wrong.",
+        appliesTo: "Debugging skill",
+        explanation: "When the portal checkpoint code hits an error, Python stops and prints a traceback: the file/line where it happened, the line of code itself, and an error type + message at the bottom. Always read the last line first — it tells you what actually went wrong.",
         code: `power = "80"
 stability = 65
 risk = power - stability
@@ -272,7 +280,8 @@ risk = power - stability
       },
       {
         heading: "Trace tables (following values by hand)",
-        explanation: "A trace table tracks a variable's value line by line, on paper, before you trust the code. It catches logic bugs that don't crash the program but still give the wrong answer.",
+        appliesTo: "TODO 2",
+        explanation: "A trace table tracks a variable's value line by line, on paper, before you trust the checkpoint's logic. It catches bugs that don't crash the program but still clear a traveller who shouldn't be cleared.",
         code: `power = 40
 stability = 30
 # line          | power | stability | risk_score
@@ -335,7 +344,8 @@ print("TODO: complete Lesson 5 starter tasks.")
     theory: [
       {
         heading: "Planning before coding",
-        explanation: "Before writing code, sketch the steps in plain English (pseudocode): what inputs you need, what to calculate, and what outcomes to print. This catches design problems before they become bugs.",
+        appliesTo: "Before TODO 1",
+        explanation: "Before writing your own simulator, sketch the steps in plain English (pseudocode): what inputs you need, what to calculate, and what outcomes to print. This catches design problems before they become bugs in your own mission.",
         code: `# Pseudocode:
 # 1. Ask for two values
 # 2. Combine them into a score
@@ -346,7 +356,8 @@ combined = value_a + value_b`
       },
       {
         heading: "Testing your own code",
-        explanation: "Run your program with a few different inputs, including edge cases (very low, very high, zero), to check it behaves sensibly every time — not just for the input you happened to try first.",
+        appliesTo: "Before TODO 5",
+        explanation: "Run your simulator with a few different inputs, including edge cases (very low, very high, zero), to check it behaves sensibly for a real mission — not just for the one input you happened to try first.",
         code: `# Try running your program with each of these before you're done:
 # value_a = 0,   value_b = 0
 # value_a = 100, value_b = 100
@@ -408,16 +419,18 @@ print("TODO: complete Lesson 6 starter tasks.")
     theory: [
       {
         heading: "For loop",
-        explanation: "A for loop repeats a block of code a known number of times. range(1, 9) counts 1 up to (but not including) 9, so it runs 8 times.",
-        code: `for checkpoint in range(1, 9):
-    print("Checkpoint", checkpoint)`
+        appliesTo: "TODO 1-2",
+        explanation: "The maze scanner's for loop repeats a block of code a known number of times. range(1, 4) counts 1 up to (but not including) 4, so it runs 3 scan passes.",
+        code: `for scan in range(1, 4):
+    print("Scan pass", scan)`
       },
       {
         heading: "Spotting a pattern (multiples)",
-        explanation: "The modulo operator % gives the remainder of a division. checkpoint % 3 == 0 is True exactly when checkpoint is a multiple of 3 — a common way to trigger something every Nth loop.",
-        code: `for checkpoint in range(1, 9):
-    if checkpoint % 3 == 0:
-        print("Hazard at checkpoint", checkpoint)`
+        appliesTo: "TODO 3",
+        explanation: "The modulo operator % gives the remainder of a division. scan % 2 == 0 is True exactly when scan is a multiple of 2 — how the scanner flags something every Nth pass.",
+        code: `for scan in range(1, 4):
+    if scan % 2 == 0:
+        print("Anomaly at scan", scan)`
       }
     ],
     quiz: [
@@ -471,21 +484,23 @@ print("TODO: complete Lesson 7 starter tasks.")
     theory: [
       {
         heading: "While loop",
-        explanation: "Repeat while a condition is True. Always update the loop state, or the condition will never become False.",
-        code: `countdown = 3
-while countdown > 0:
-    print(countdown)
-    countdown -= 1
-print("Launch")`
+        appliesTo: "TODO 1-3",
+        explanation: "The countdown terminal repeats while a condition is True. Always update the loop state, or the countdown will never reach zero.",
+        code: `fuel_ticks = 3
+while fuel_ticks > 0:
+    print(fuel_ticks)
+    fuel_ticks -= 1
+print("Ignition")`
       },
       {
         heading: "Avoiding infinite loops (safety)",
-        explanation: "A while loop needs its condition to eventually become False. If you forget to update the counter inside the loop, it will run forever — always double-check the update line is inside the loop body.",
-        code: `countdown = 3
-while countdown > 0:
-    print(countdown)
-    # Forgetting countdown -= 1 here causes an infinite loop!
-    countdown -= 1`
+        appliesTo: "TODO 3",
+        explanation: "A while loop needs its condition to eventually become False. If the terminal forgets to update the counter inside the loop, the countdown runs forever — always double-check the update line is inside the loop body.",
+        code: `fuel_ticks = 3
+while fuel_ticks > 0:
+    print(fuel_ticks)
+    # Forgetting fuel_ticks -= 1 here causes an infinite loop!
+    fuel_ticks -= 1`
       }
     ],
     quiz: [
@@ -544,20 +559,22 @@ print("TODO: complete Lesson 8 starter tasks.")
     theory: [
       {
         heading: "Validation pattern",
-        explanation: "Keep asking until the input is valid. A while loop that re-prompts is the standard way to reject bad input without crashing.",
-        code: `score = int(input("Score 0-100: "))
-while score < 0 or score > 100:
-    score = int(input("Try again: "))
-print("Accepted", score)`
+        appliesTo: "TODO 3",
+        explanation: "The faction trial keeps asking until a score is valid. A while loop that re-prompts is the standard way to reject a bad reading without crashing the whole trial.",
+        code: `energy = int(input("Energy 0-50: "))
+while energy < 0 or energy > 50:
+    energy = int(input("Try again: "))
+print("Accepted", energy)`
       },
       {
         heading: "Mixing for and while loops",
-        explanation: "A for loop can repeat a fixed number of times (e.g. one pass per trainee), while a while loop nested inside it can keep validating a single trainee's input until it's acceptable, before moving on to the next trainee.",
-        code: `for trainee in range(1, 6):
-    score = int(input("Score: "))
-    while score < 0 or score > 100:
-        score = int(input("Try again: "))
-    print("Trainee", trainee, "scored", score)`
+        appliesTo: "TODO 1-3",
+        explanation: "A for loop can repeat a fixed number of times (one pass per candidate), while a while loop nested inside it keeps validating a single candidate's reading until it's acceptable, before the trial moves on to the next one.",
+        code: `for cadet in range(1, 4):
+    energy = int(input("Energy: "))
+    while energy < 0 or energy > 50:
+        energy = int(input("Try again: "))
+    print("Cadet", cadet, "at", energy)`
       }
     ],
     quiz: [
@@ -622,16 +639,18 @@ print("TODO: complete Lesson 9 starter tasks.")
     theory: [
       {
         heading: "Bringing loops together",
-        explanation: "Combining a for loop (a fixed number of cycles) with a nested while loop (validating one cycle's input) lets you process a whole queue safely, one validated item at a time.",
-        code: `for cycle in range(1, 7):
-    command = input("Command: ").strip().lower()
-    while command not in ("open", "hold"):
-        command = input("Enter open or hold: ").strip().lower()
-    print("Cycle", cycle, "->", command)`
+        appliesTo: "TODO 1-3",
+        explanation: "Combining a for loop (a fixed number of rotation cycles) with a nested while loop (validating one cycle's command) lets the final mission process a whole queue safely, one validated command at a time.",
+        code: `for round_num in range(1, 4):
+    action = input("Action: ").strip().lower()
+    while action not in ("scan", "wait"):
+        action = input("Enter scan or wait: ").strip().lower()
+    print("Round", round_num, "->", action)`
       },
       {
         heading: "Prompting AI safely",
-        explanation: "When asking an AI assistant (like Gemini) for help, be specific about what you want, review the code before using it, and never paste in personal information, passwords, or anything private.",
+        appliesTo: "AI-safety guidance",
+        explanation: "As the mission wraps up, be just as careful asking an AI assistant (like Gemini) for help: be specific about what you want, review the code before using it, and never paste in personal information, passwords, or anything private.",
         code: `# Example of a clear, safe prompt:
 # "Explain what a while loop does in Python,
 #  using a simple counting example.

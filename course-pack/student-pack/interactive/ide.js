@@ -182,6 +182,31 @@ function getLessonStatus(id) {
   return getProgress()[id] || "not-started";
 }
 
+// Separate, lightweight tracking for whether a student has engaged with a
+// lesson's quiz — deliberately NOT a value of the not-started/in-progress/
+// complete status above (which stays driven purely by a clean Run), just a
+// visible nudge so the quiz isn't a no-op (instructional-design finding #4).
+const THEORY_REVIEWED_KEY = "ide-theory-reviewed";
+
+function getTheoryReviewed() {
+  try {
+    return JSON.parse(localStorage.getItem(THEORY_REVIEWED_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function markTheoryReviewed(id) {
+  const reviewed = getTheoryReviewed();
+  if (reviewed[id]) return;
+  reviewed[id] = true;
+  localStorage.setItem(THEORY_REVIEWED_KEY, JSON.stringify(reviewed));
+}
+
+function isTheoryReviewed(id) {
+  return !!getTheoryReviewed()[id];
+}
+
 function getRequestedLessonId() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get("lesson");
@@ -245,6 +270,13 @@ function renderTheoryCard(item) {
   heading.textContent = item.heading;
   card.appendChild(heading);
 
+  if (item.appliesTo) {
+    const appliesTo = document.createElement("span");
+    appliesTo.className = "theory-card__applies-to";
+    appliesTo.textContent = "Applies to " + item.appliesTo;
+    card.appendChild(appliesTo);
+  }
+
   const explanation = document.createElement("p");
   explanation.textContent = item.explanation;
   card.appendChild(explanation);
@@ -285,7 +317,7 @@ function renderTheoryPanel(lesson) {
 }
 
 /** Build one multiple-choice quiz question (prompt + option buttons + feedback line). */
-function renderQuizQuestion(q, index) {
+function renderQuizQuestion(q, index, lessonId) {
   const wrap = document.createElement("div");
   wrap.className = "quiz-question";
 
@@ -315,6 +347,10 @@ function renderQuizQuestion(q, index) {
         feedback.textContent = "Correct!";
         feedback.className = "quiz-feedback quiz-feedback--correct";
         optionsWrap.querySelectorAll(".quiz-option").forEach(btn => { btn.disabled = true; });
+        if (!isTheoryReviewed(lessonId)) {
+          markTheoryReviewed(lessonId);
+          renderNav();
+        }
       } else {
         optionBtn.classList.add("is-incorrect");
         feedback.textContent = "Not quite — try another option.";
@@ -341,7 +377,7 @@ function renderQuizSection(lesson) {
   heading.textContent = "Check your understanding";
   section.appendChild(heading);
 
-  quiz.forEach((q, index) => section.appendChild(renderQuizQuestion(q, index)));
+  quiz.forEach((q, index) => section.appendChild(renderQuizQuestion(q, index, lesson.id)));
 
   theoryPanelBody.appendChild(section);
 }
@@ -395,7 +431,8 @@ function renderNav() {
     const status = getLessonStatus(lesson.id);
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.textContent = lesson.title;
+    btn.textContent = lesson.title + (isTheoryReviewed(lesson.id) ? " ✓" : "");
+    if (isTheoryReviewed(lesson.id)) btn.title = "Theory reviewed";
     btn.dataset.lessonId = lesson.id;
     btn.className = "btn btn-sm lesson-nav-btn " + statusVariant(status);
     if (lesson.id === currentLessonId) btn.classList.add("active");
@@ -409,7 +446,8 @@ function renderNav() {
   legend.innerHTML =
     '<span class="badge bg-outline-secondary border border-secondary me-1">●</span>not started&nbsp;&nbsp;' +
     '<span class="badge bg-warning text-dark me-1">●</span>in progress&nbsp;&nbsp;' +
-    '<span class="badge bg-success me-1">●</span>complete';
+    '<span class="badge bg-success me-1">●</span>complete&nbsp;&nbsp;' +
+    '<span class="me-1">✓</span>theory reviewed';
   navRow.appendChild(legend);
 }
 
@@ -460,7 +498,7 @@ function initializeEditor() {
 // Shift-Tab/Enter indentation is handled natively by CodeMirror's Python
 // mode (indentUnit/tabSize/indentWithTabs, set above), so the custom
 // keydown handler this used to need is gone.
-function handleEditorChange() {
+function handleEditorChange(cm, changeObj) {
   clearErrorLine();
 
   if (!currentLessonId) return;
@@ -470,6 +508,15 @@ function handleEditorChange() {
   if (getLessonStatus(currentLessonId) === "not-started") {
     setLessonStatus(currentLessonId, "in-progress");
     renderNav();
+  }
+
+  // Auto-close the theory panel on the student's first real keystroke — it
+  // auto-opens on lesson load for discovery, but must not block the editor
+  // once they start working. changeObj.origin is "setValue" for the
+  // programmatic setValue() calls in selectLesson()/Reset/Load, so those
+  // don't trigger this — only actual typing does.
+  if (changeObj && changeObj.origin !== "setValue" && theoryPanel && theoryPanel.classList.contains("is-open")) {
+    closeTheoryPanel();
   }
 }
 

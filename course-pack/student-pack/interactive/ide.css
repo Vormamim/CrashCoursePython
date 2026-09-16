@@ -336,6 +336,17 @@ html, body {
   color: #ff8de9;
 }
 
+.theory-card__applies-to {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--gh-border);
+  border-radius: 999px;
+  color: var(--gh-fg-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
 .theory-card p {
   margin: 0 0 0.6rem;
   color: var(--gh-fg);
