@@ -8,13 +8,34 @@
   <!--
     Self-contained IDE page – intentionally NOT using the site Jekyll layout
     so it can fill the full viewport without the sidebar/header chrome.
-    Bootstrap 5 "Darkly" theme from Bootswatch gives a dark, terminal-friendly look.
+    Bootstrap 5 theme from Bootswatch — "Darkly" for dark mode, "Flatly" for
+    light — picked before first paint (see the inline script below) so
+    switching modes never shows a flash of the wrong theme.
   -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css"
-    crossorigin="anonymous">
+  <script>
+    (function () {
+      var theme = localStorage.getItem("pyadv-theme") === "light" ? "light" : "dark";
+      document.documentElement.dataset.theme = theme;
+      var variant = theme === "light" ? "flatly" : "darkly";
+      document.write(
+        '<link id="bs-theme-css" rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/' +
+        variant + '/bootstrap.min.css">'
+      );
+    })();
+  </script>
   <link rel="stylesheet" href="ide.css">
+
+  <!-- CodeMirror — real Python syntax highlighting instead of flat text,
+       same version/setup already proven in LoFiPy. Theme swaps between
+       monokai (dark) and eclipse (light) alongside the Bootstrap swap
+       above — see applyTheme() in ide.js. -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/eclipse.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
 </head>
 <body>
 
@@ -55,11 +76,15 @@
         <button id="btn-load" class="btn btn-sm btn-secondary" title="Load a .py file">
           ↑ Load
         </button>
-        <!-- Hidden file input triggered by btn-load -->
-        <input type="file" id="file-input" accept=".py" style="display:none" aria-hidden="true">
+        <!-- Hidden file input triggered by btn-load. Accepts .zip (the
+             normal case — see the SAVE note below) and .py (older files a
+             student may already have saved, or one shared outside the IDE). -->
+        <input type="file" id="file-input" accept=".py,.zip" style="display:none" aria-hidden="true">
 
-        <!-- SAVE: download current editor text as a .py file -->
-        <button id="btn-save" class="btn btn-sm btn-secondary" title="Save code as .py">
+        <!-- SAVE: download current editor text zipped as a .zip. School
+             networks (DoE-managed Chrome/Edge) block raw .py downloads at
+             the browser/proxy layer; .zip is not blocked. -->
+        <button id="btn-save" class="btn btn-sm btn-secondary" title="Save code (zipped)">
           ↓ Save
         </button>
 
@@ -72,14 +97,15 @@
         <span id="status-msg">Loading Python runtime…</span>
 
         <!-- Link back to course home -->
-        <a href="../" class="btn btn-sm btn-outline-light ms-auto" title="Back to course home">
+        <a href="../" class="btn btn-sm btn-outline-secondary ms-auto" title="Back to course home">
           ← Course
         </a>
       </div>
 
-      <!-- Code editor: line-number gutter + textarea -->
+      <!-- Code editor: CodeMirror mounts onto this textarea (real Python
+           syntax highlighting + its own line-number gutter) — see
+           initializeEditor() in ide.js. -->
       <div id="editor-wrap">
-        <div id="editor-gutter" aria-hidden="true"></div>
         <textarea
           id="editor"
           spellcheck="false"
@@ -90,6 +116,10 @@
           placeholder="# Write your Python code here…"></textarea>
       </div>
     </div>
+
+    <!-- Drag up/down to resize the output panel below. Double-click to
+         reset. Height is remembered per-browser (localStorage). -->
+    <div id="row-resize-handle" title="Drag to resize output panel (double-click to reset)"></div>
 
     <!-- ── Row 3: Output console ─────────────────────────── -->
     <div id="row-output">
@@ -114,7 +144,7 @@
         <p class="theory-panel__kicker">Theory</p>
         <h2 id="theory-panel-title" class="theory-panel__title">Lesson title</h2>
       </div>
-      <button id="btn-theory-close" type="button" class="btn btn-sm btn-outline-light theory-panel__close" title="Close theory panel">Close</button>
+      <button id="btn-theory-close" type="button" class="btn btn-sm btn-outline-secondary theory-panel__close" title="Close theory panel">Close</button>
     </div>
     <div id="theory-panel-body" class="theory-panel__body">
       <!-- theory cards rendered by ide.js renderTheoryPanel() -->
@@ -128,7 +158,7 @@
           <p class="lesson-modal__kicker">Lesson mission briefing</p>
           <h2 id="lesson-modal-title" class="lesson-modal__title">Lesson title</h2>
         </div>
-        <button id="btn-modal-close" type="button" class="btn btn-sm btn-outline-light lesson-modal__close">Close</button>
+        <button id="btn-modal-close" type="button" class="btn btn-sm btn-outline-secondary lesson-modal__close">Close</button>
       </div>
       <div class="lesson-modal__body">
         <p class="lesson-modal__label">Goal</p>
@@ -137,7 +167,27 @@
         <p id="lesson-modal-story" class="lesson-modal__text"></p>
         <div id="lesson-modal-tags" class="lesson-modal__tags"></div>
         <div class="lesson-modal__footer">
-          <button id="btn-modal-start" type="button" class="btn btn-sm btn-success">Start coding</button>
+          <button id="btn-modal-start" type="button" class="btn btn-sm btn-success btn-modal-start--cycle">Start lesson</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shared prompt modal: used both when the student's code calls
+       input() (real Pyodide input() suspends on this instead of the
+       native, blocking window.prompt()) and, as a fallback, to ask for a
+       filename when saving without the browser's native Save As dialog. -->
+  <div id="input-modal" class="input-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="input-modal-title">
+    <div class="input-modal__panel">
+      <div class="input-modal__top">
+        <h3 id="input-modal-title" class="input-modal__title">Input needed</h3>
+      </div>
+      <div class="input-modal__body">
+        <p id="input-modal-prompt" class="input-modal__prompt">Enter input:</p>
+        <input type="text" id="input-modal-field" class="input-modal__field" autocomplete="off" aria-label="Input value">
+        <div class="input-modal__footer">
+          <button id="btn-input-submit" type="button" class="btn btn-sm btn-success">Submit</button>
+          <button id="btn-input-cancel" type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
         </div>
       </div>
     </div>
@@ -145,6 +195,11 @@
 
   <!-- Pyodide in-browser Python runtime (loaded from CDN) -->
   <script src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js" crossorigin="anonymous"></script>
+
+  <!-- JSZip — saves are zipped client-side since school networks block raw
+       .py downloads at the browser/proxy layer; .zip is not. Same library/
+       version as LoFiPy's proven save/load. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
   <!-- Lesson definitions (must load before ide.js) -->
   <script src="lessons.js"></script>
