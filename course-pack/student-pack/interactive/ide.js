@@ -297,11 +297,52 @@ function renderTheoryCard(item) {
   return card;
 }
 
+/** Build the "what to do" + "core idea" block that sits above the per-concept
+ *  theory cards — task instructions in plain language plus the one big idea
+ *  behind them, distinct from the modal's goal/story (scene-setting) and the
+ *  theory cards' explanations (syntax detail). */
+function renderTaskIntro(lesson) {
+  const intro = lesson.taskIntro;
+  if (!intro) return null;
+
+  const wrap = document.createElement("div");
+  wrap.className = "task-intro";
+
+  if (intro.whatToDo) {
+    const label1 = document.createElement("p");
+    label1.className = "task-intro__label";
+    label1.textContent = "What to do";
+    wrap.appendChild(label1);
+
+    const whatToDo = document.createElement("p");
+    whatToDo.className = "task-intro__text";
+    whatToDo.textContent = intro.whatToDo;
+    wrap.appendChild(whatToDo);
+  }
+
+  if (intro.coreIdea) {
+    const label2 = document.createElement("p");
+    label2.className = "task-intro__label";
+    label2.textContent = "Core idea";
+    wrap.appendChild(label2);
+
+    const coreIdea = document.createElement("p");
+    coreIdea.className = "task-intro__text";
+    coreIdea.textContent = intro.coreIdea;
+    wrap.appendChild(coreIdea);
+  }
+
+  return wrap;
+}
+
 /** Rebuild the theory panel's content for the given lesson. */
 function renderTheoryPanel(lesson) {
   if (!theoryPanel) return;
   theoryPanelTitle.textContent = lesson.title;
   theoryPanelBody.innerHTML = "";
+
+  const taskIntro = renderTaskIntro(lesson);
+  if (taskIntro) theoryPanelBody.appendChild(taskIntro);
 
   const theory = lesson.theory || [];
   if (theory.length === 0) {

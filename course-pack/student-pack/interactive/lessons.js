@@ -8,6 +8,10 @@ const LESSONS = [
     title: "1 · Mission Control",
     goal: "Create a simple tribute profile and practise variables, types, reassignment, and printed output.",
     story: "The mission console wakes up and asks the student to introduce a crew member before the arena simulation starts.",
+    taskIntro: {
+      whatToDo: "Fill in four starter variables for your crew member — their name, district number, score, and active status. Then update the score to reflect a positive event happening (something like score = score + 1.5), and finish by printing all four values so the console shows a complete status report.",
+      coreIdea: "The core idea: a variable is a named box that stores a value you can change later by reassigning it — that's what lets you update score partway through the program and have the new value stick when you print it."
+    },
     theory: [
       {
         heading: "Variables & types",
@@ -61,6 +65,10 @@ print("TODO: complete Lesson 1 starter tasks.")
     title: "2 · Dialogue Engine",
     goal: "Unlock the gate by collecting clues, converting input, and using a simple decision.",
     story: "A sealed terminal is waiting for the right pair of clues, and the student has to calculate the unlock code.",
+    taskIntro: {
+      whatToDo: "You'll collect two number clues from the player using input(), then convert both from text into integers with int() so you can do maths with them. Combine the two converted numbers with arithmetic to compute an unlock_score, then use if/else so a score of 30 or higher unlocks the gate while anything lower leaves it denied.",
+      coreIdea: "The core idea: input() always gives you back text, even when someone types a number, so you must convert it with int() before you can add, multiply, or compare it — skip that step and the unlock maths will break."
+    },
     theory: [
       {
         heading: "Input + conversion",
@@ -131,6 +139,10 @@ print("TODO: complete Lesson 2 starter tasks.")
     title: "3 · Choices & Consequences",
     goal: "Sort a traveller into the right faction using comparison logic and nested branching.",
     story: "The faction gate opens only when the traveller’s scores are judged fairly by the placement system.",
+    taskIntro: {
+      whatToDo: "Using the bravery and logic scores the player enters, write an if/elif/else chain that sorts the traveller into one of four groups: Command, Frontline, Scholar, or Support. Then add a nested if inside the Command branch that checks for an extra-high score and upgrades that traveller to 'Command Elite'.",
+      coreIdea: "The core idea: if/elif/else checks conditions in order and runs exactly one matching branch, and nesting an if inside another lets you ask a more specific follow-up question — like 'are they Elite?' — only once the outer condition is already true."
+    },
     theory: [
       {
         heading: "if / elif / else",
@@ -201,6 +213,10 @@ print("TODO: complete Lesson 3 starter tasks.")
     title: "4 · Data Without Loops",
     goal: "Use lists, tuples, indexes, and if/else logic to manage house records.",
     story: "The academy dashboard needs a quick leader update before the annual points report is sent out.",
+    taskIntro: {
+      whatToDo: "Update one team's points directly by its index in the team_points list (for example, giving Wolf a bonus). Then, without using any loops, use if/else comparisons on the list values by index to work out which team currently has the most points and store its name as leader. Finish by printing the team names, points, term info, how many teams there are, and the current leader.",
+      coreIdea: "The core idea: a list stores items in order so you can read or change any one of them with an index starting at 0, while a tuple is a similar group that's locked once created — good for fixed facts, like the term and year, that shouldn't accidentally change."
+    },
     theory: [
       {
         heading: "Lists + index",
@@ -265,6 +281,10 @@ print("TODO: complete Lesson 4 starter tasks.")
     title: "5 · Structured Logic",
     goal: "Combine input, arithmetic, list data, and branching to build a full portal checkpoint.",
     story: "The portal team is under pressure, and the student has to decide whether the system is denied, conditional, or approved.",
+    taskIntro: {
+      whatToDo: "Using the power, stability, and ID clearance values the player enters, compute a risk_score and then use if/elif/else with the status_labels list to sort the result into Denied, Conditional, or Approved — factoring the ID clearance into that decision too. Finish by printing the risk score and the final status.",
+      coreIdea: "The core idea: before you trust a chain of calculations and branches, trace it by hand on paper line by line, writing down each variable's value as it changes, so you catch a wrong risk score or a wrongly-cleared traveller before the code ever runs for real."
+    },
     theory: [
       {
         heading: "Reading a traceback",
@@ -341,6 +361,10 @@ print("TODO: complete Lesson 5 starter tasks.")
     title: "6 · Capstone Simulation",
     goal: "Design a complete mini-simulator that connects the first half of the course.",
     story: "The first mission arc closes with a custom simulator chosen by the student team.",
+    taskIntro: {
+      whatToDo: "Design your own mini-simulator: give it a scenario_name, collect three input values from the player, and store at least three possible outcome names in a status_levels list or tuple. Combine the three inputs into a single combined score, then use if/elif/else with at least three outcomes to decide the result, and print the scenario name, combined score, and final outcome.",
+      coreIdea: "The core idea: sketching your plan as pseudocode first, and then testing your finished simulator with edge-case inputs like zero or very large numbers, catches design problems before they become bugs — this lesson is about planning and testing your own logic, not just following someone else's."
+    },
     theory: [
       {
         heading: "Planning before coding",
@@ -416,6 +440,10 @@ print("TODO: complete Lesson 6 starter tasks.")
     title: "7 · Loop Launch (for)",
     goal: "Practise for loops by scanning checkpoints and spotting repeating patterns.",
     story: "The maze scanner comes online and the student has to sweep each checkpoint in order.",
+    taskIntro: {
+      whatToDo: "Build a for loop using range() that sweeps checkpoints 1 through 8 in order. Inside the loop, print the current checkpoint number each pass, and add an if check using the modulo operator (%) to spot every checkpoint that's a multiple of 3, printing a hazard warning for each one.",
+      coreIdea: "The core idea: a for loop with range() repeats an action a known number of times, which is how you scan all 8 checkpoints without writing the same print line 8 times over — and % (modulo) spots multiples by checking whether a division leaves no remainder."
+    },
     theory: [
       {
         heading: "For loop",
@@ -481,6 +509,10 @@ print("TODO: complete Lesson 7 starter tasks.")
     title: "8 · Loop Control (while)",
     goal: "Use a while loop with a counter and a safe stopping condition.",
     story: "A launch countdown begins, and the student must keep the terminal running until the timer reaches zero.",
+    taskIntro: {
+      whatToDo: "Write a while loop that keeps running as long as countdown is 1 or more. Each pass, print the current countdown value (something like 'T-minus' plus the number), then decrease countdown by 1 inside the loop so it eventually reaches zero and stops. Once the loop finishes, print 'Launch' one final time.",
+      coreIdea: "The core idea: a while loop keeps repeating for as long as its condition stays True, so you must update the variable it depends on inside the loop body — forget that update and the countdown, and the loop, never stop."
+    },
     theory: [
       {
         heading: "While loop",
@@ -556,6 +588,10 @@ print("TODO: complete Lesson 8 starter tasks.")
     title: "9 · Loop Patterns (mixed)",
     goal: "Mix for and while loops to validate input and process a queue of trainees.",
     story: "The faction trial needs repeated score checks, and the student has to decide which loop solves each part.",
+    taskIntro: {
+      whatToDo: "Use a for loop to process five trainees one at a time. For each trainee, read a score with input() and convert it to a number, then use a nested while loop to keep re-asking until the score is between 0 and 100. If a trainee's valid score is 70 or higher, add one to eligible_count, and once all five trainees are done, print the final eligible count.",
+      coreIdea: "The core idea: you can nest a while loop inside a for loop so the while loop fully handles validating one trainee's input — rejecting bad values until it's acceptable — before the for loop moves on to the next trainee."
+    },
     theory: [
       {
         heading: "Validation pattern",
@@ -636,6 +672,10 @@ print("TODO: complete Lesson 9 starter tasks.")
     title: "10 · Loop Capstone",
     goal: "Finish the course with a loop-based capstone and responsible Gemini prompting.",
     story: "The final portal rotation mission brings the whole story together and asks the student to document the result safely.",
+    taskIntro: {
+      whatToDo: "Use a for loop to run six command cycles. Each cycle, ask the player for a command and normalize it (clean up spacing and capitalization) so your checks aren't thrown off by formatting, then use a nested while loop to keep re-asking until the command is either 'open' or 'hold'. Use if/else to add each valid command to the right counter, and after all six cycles, print both totals in a clear summary.",
+      coreIdea: "The core idea: combining a for loop for a fixed number of cycles with a nested while loop for validation lets you safely process a whole queue of commands, one fully-checked command at a time — the same careful, double-checking habit matters when you ask an AI assistant like Gemini for help too."
+    },
     theory: [
       {
         heading: "Bringing loops together",
