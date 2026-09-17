@@ -604,6 +604,20 @@ html, body {
 /* Info/empty messages – muted */
 .out-info   { color: var(--gh-fg-muted); font-style: italic; }
 
+/* Brief, wordless red pulse on the output panel when a chunky paste lands
+   in the editor (see triggerPasteGlitch() in ide.js) — no toast, no
+   explanation, just a noticeable flash. Same real-time-feedback idea as
+   LoFiPy's CRT glitch, plain red here to match this course's flatter
+   visual style. */
+@keyframes paste-glitch {
+  0%   { box-shadow: inset 0 0 0 9999px rgba(255, 0, 0, 0); }
+  30%  { box-shadow: inset 0 0 0 9999px rgba(255, 0, 0, 0.35); }
+  100% { box-shadow: inset 0 0 0 9999px rgba(255, 0, 0, 0); }
+}
+#output.paste-glitch {
+  animation: paste-glitch 250ms ease-out;
+}
+
 /* ── Responsive adjustments ─────────────────────────────── */
 @media (max-width: 600px) {
   #ide-app {

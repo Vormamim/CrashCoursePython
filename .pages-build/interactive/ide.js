@@ -160,6 +160,18 @@ function findErrorLine(errText) {
   return parseInt(matches[matches.length - 1][1], 10);
 }
 
+/** Reduce a raw Pyodide traceback down to just "ErrorType: detail" — the
+ *  full traceback is dozens of internal frames (Pyodide's own runner,
+ *  _run_user_code, one _maybe_await frame per nested call) that mean
+ *  nothing to a student and bury the one line they need. Same approach
+ *  as LoFiPy's proven formatPythonError(). */
+function formatPythonError(errText) {
+  const lines = errText.split("\n").map(l => l.trim()).filter(Boolean);
+  const lastLine = lines.length ? lines[lines.length - 1] : "Error";
+  const typeMatch = lastLine.match(/^([A-Za-z_][\w.]*)\s*:\s*(.+)$/);
+  return typeMatch ? `${typeMatch[1]}: ${typeMatch[2]}` : lastLine;
+}
+
 // ── Progress (localStorage) ───────────────────────────────
 
 const PROGRESS_KEY = "ide-progress";
@@ -559,6 +571,25 @@ function handleEditorChange(cm, changeObj) {
   if (changeObj && changeObj.origin !== "setValue" && theoryPanel && theoryPanel.classList.contains("is-open")) {
     closeTheoryPanel();
   }
+
+  // A chunky paste (more than 3 lines landing at once via CodeMirror's own
+  // "paste" origin tag — clipboard or drag-drop, a hard fact rather than a
+  // guess) triggers a brief red pulse on the output panel. Deliberately
+  // wordless — no toast, no explanation anywhere in the UI — same
+  // real-time-feedback idea as LoFiPy's triggerGlitch(), just a plain red
+  // pulse here instead of LoFiPy's CRT hue-shift glitch, to match this
+  // course's flatter visual style.
+  if (changeObj && changeObj.origin === "paste" && (changeObj.text || []).length > 3) {
+    triggerPasteGlitch();
+  }
+}
+
+function triggerPasteGlitch() {
+  if (!output) return;
+  output.classList.remove("paste-glitch");
+  void output.offsetWidth; // restart the animation if a previous pulse is still mid-flight
+  output.classList.add("paste-glitch");
+  setTimeout(() => output.classList.remove("paste-glitch"), 250);
 }
 
 // ── RUN ───────────────────────────────────────────────────
@@ -634,7 +665,7 @@ btnRun.addEventListener("click", async () => {
       appendOutput(`⚠ Error on line ${errLine}\n`, "out-error-heading");
       highlightErrorLine(errLine);
     }
-    appendOutput(errText + "\n", "out-error");
+    appendOutput(formatPythonError(errText) + "\n", "out-error");
 
     // Ensure progress at least moves to in-progress
     if (currentLessonId && getLessonStatus(currentLessonId) === "not-started") {
@@ -970,6 +1001,9 @@ async function initPyodide() {
     pyodide.runPython(`
 import ast
 import builtins
+import inspect
+import time
+import copy
 # js_request_input is bound directly into this namespace via
 # pyodide.globals.set() above — no "from js import" needed for it.
 
@@ -978,6 +1012,20 @@ class InputCancelled(Exception):
     side resolves with None specifically to signal this (a plain empty
     string is a legitimate answer, not a cancellation)."""
     pass
+
+class LoopTimeout(Exception):
+    """Raised when a while/for loop runs past _LOOP_TIME_BUDGET seconds of
+    wall-clock time — almost always a student's infinite loop (a while
+    condition that never becomes False, or similar), not something a
+    normal lesson exercise should ever legitimately need. Pyodide runs on
+    the main thread with no way to interrupt it from outside, so without
+    this a genuine infinite loop freezes the whole page until reload —
+    this bounds that freeze to _LOOP_TIME_BUDGET seconds and turns it into
+    a catchable, readable error instead."""
+    pass
+
+_LOOP_TIME_BUDGET = 8.0
+_loop_deadline = None
 
 async def _input(prompt=""):
     result = await js_request_input(str(prompt))
@@ -988,21 +1036,88 @@ async def _input(prompt=""):
 # Replace the built-in input function
 builtins.input = _input
 
+async def _maybe_await(value):
+    """Transparent pass-through used by _InputAwaiter's rewritten call
+    sites: awaits only when the call actually produced a coroutine (i.e.
+    only input() calls, directly or via student-defined functions, do
+    anything here) and returns everything else untouched."""
+    if inspect.iscoroutine(value):
+        return await value
+    return value
+
+# A pre-parsed template for the loop-timeout check, spliced into every
+# while/for loop body (see _InputAwaiter below) rather than calling out to
+# a helper function — a helper call would itself show up as the
+# innermost, always-the-same-line traceback frame when it raises, which is
+# exactly the wrong-line-number bug the input() fix just solved for a
+# different case. Inlining the check keeps the raise's own frame on the
+# loop's actual line.
+_LOOP_GUARD = ast.parse(
+    'if time.time() > _loop_deadline: '
+    'raise LoopTimeout("Your code ran for too long — check for an infinite loop (e.g. a while loop whose condition never becomes False).")'
+).body[0]
+
 class _InputAwaiter(ast.NodeTransformer):
-    """Rewrites bare input(...) calls into awaited calls so a script that
-    reads naturally as normal Python can still suspend on the in-page
-    modal without every student needing to write async/await themselves."""
-    def visit_Call(self, node):
+    """Rewrites a script so input() suspends on the in-page modal no
+    matter how deeply it's nested inside student-defined functions —
+    without every student needing to write async/await themselves — and
+    guards every while/for loop against running forever.
+
+    A first version only rewrote bare input(...) calls into
+    'await input(...)', which works at module level but is a SyntaxError
+    ('await' outside async function) the moment a student writes a
+    perfectly normal 'def get_name(): return input(...)' — an extremely
+    common pattern once a lesson introduces functions. Every 'def'
+    (including nested defs and class methods) is now promoted to
+    'async def', and every call expression is routed through
+    _maybe_await so calling a function that itself (transitively) calls
+    input() correctly suspends too, while ordinary calls are unaffected."""
+    def visit_FunctionDef(self, node):
         self.generic_visit(node)
-        if isinstance(node.func, ast.Name) and node.func.id == 'input':
-            return ast.copy_location(ast.Await(value=node), node)
+        new_node = ast.AsyncFunctionDef(
+            name=node.name, args=node.args, body=node.body,
+            decorator_list=node.decorator_list, returns=node.returns,
+            type_comment=getattr(node, 'type_comment', None),
+        )
+        return ast.copy_location(new_node, node)
+
+    def visit_Lambda(self, node):
+        # Python has no 'async lambda' syntax, so a lambda's body can't be
+        # rewritten to await — leave it untouched. input() inside a lambda
+        # isn't supported (a lambda calling a function that needs to
+        # suspend will just get an unawaited coroutine back); an
+        # extremely rare pattern for this course.
         return node
 
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        wrapped = ast.Call(
+            func=ast.Name(id='_maybe_await', ctx=ast.Load()),
+            args=[node], keywords=[],
+        )
+        return ast.copy_location(ast.Await(value=wrapped), node)
+
+    def _guard_loop(self, node):
+        self.generic_visit(node)
+        guard = copy.deepcopy(_LOOP_GUARD)
+        for child in ast.walk(guard):
+            ast.copy_location(child, node)
+        node.body = [guard] + node.body
+        return node
+
+    def visit_While(self, node):
+        return self._guard_loop(node)
+
+    def visit_For(self, node):
+        return self._guard_loop(node)
+
 async def _run_user_code(source, ns):
+    global _loop_deadline
     tree = ast.parse(source, mode='exec')
     tree = _InputAwaiter().visit(tree)
     ast.fix_missing_locations(tree)
     code_obj = compile(tree, '<exec>', 'exec', flags=ast.PyCF_ALLOW_TOP_LEVEL_AWAIT)
+    _loop_deadline = time.time() + _LOOP_TIME_BUDGET
     coro = eval(code_obj, ns, ns)
     if coro is not None:
         await coro
