@@ -1028,7 +1028,15 @@ _LOOP_TIME_BUDGET = 8.0
 _loop_deadline = None
 
 async def _input(prompt=""):
+    global _loop_deadline
     result = await js_request_input(str(prompt))
+    # A loop waiting on a student to read a prompt and type an answer is
+    # not "spinning forever" — it's normal human pacing, which can easily
+    # add up to more than _LOOP_TIME_BUDGET across a loop that asks for
+    # input every cycle (e.g. a validation loop retried a few times).
+    # Reset the clock on every completed input() so only genuine
+    # non-interactive infinite loops ever trip the guard.
+    _loop_deadline = time.time() + _LOOP_TIME_BUDGET
     if result is None:
         raise InputCancelled()
     return str(result)
