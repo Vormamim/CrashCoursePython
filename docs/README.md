@@ -5,6 +5,9 @@ layout: default
 # Python Crash Course (10 Lessons, Age 13+)
 
 This pack delivers ten 60-minute lessons with 40 minutes of coding per lesson.
+In a cycle of 6 lessons a fortnight, this unit will take 5-6 weeks to complete
+for 'regular' students new to programming. With experience of HPGE students,
+allow 2-3 weeks.
 
 ## Course Progression
 - Lessons 1-6: no loops, no user-defined functions, no dictionaries, no file handling
@@ -32,7 +35,7 @@ This pack delivers ten 60-minute lessons with 40 minutes of coding per lesson.
 - lesson-07-loop-launch-for
 - lesson-08-loop-control-while
 - lesson-09-loop-patterns-mixed
-- lesson-10-loop-capstone-ai-safe
+- lesson-10-loop-capstone-ai-safe-nested loops
 - shared
 
 ## Shared Resources
