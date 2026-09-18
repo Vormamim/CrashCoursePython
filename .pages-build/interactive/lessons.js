@@ -670,31 +670,34 @@ print("TODO: complete Lesson 9 starter tasks.")
   {
     id: "lesson-10",
     title: "10 · Loop Capstone",
-    goal: "Finish the course with a loop-based capstone and responsible Gemini prompting.",
-    story: "The final portal rotation mission brings the whole story together and asks the student to document the result safely.",
+    goal: "Master the nested-loop pattern as the course capstone: a for loop for fixed repetition, with a while loop nested inside it that fully validates each cycle before the for loop is allowed to move on.",
+    story: "The final portal rotation brings every loop skill from the course together in one mission — and it's a good moment to remember that the same careful, double-checking habits that make this code reliable are worth carrying into how you use tools like Gemini too.",
     taskIntro: {
       whatToDo: "Use a for loop to run six command cycles. Each cycle, ask the player for a command and normalize it (clean up spacing and capitalization) so your checks aren't thrown off by formatting, then use a nested while loop to keep re-asking until the command is either 'open' or 'hold'. Use if/else to add each valid command to the right counter, and after all six cycles, print both totals in a clear summary.",
-      coreIdea: "The core idea: combining a for loop for a fixed number of cycles with a nested while loop for validation lets you safely process a whole queue of commands, one fully-checked command at a time — the same careful, double-checking habit matters when you ask an AI assistant like Gemini for help too."
+      coreIdea: "The core idea: a for loop repeats a fixed number of times, but when a while loop is nested inside it, each outer cycle doesn't finish until the inner while loop's condition becomes false — so the outer loop can pause for as long as it takes on a single cycle to fully validate it before moving on."
     },
     theory: [
       {
+        heading: "How a nested loop actually runs",
+        appliesTo: "TODO 1-3",
+        explanation: "The for loop's cycle counter only advances once its ENTIRE inner while loop has finished for that cycle — even if that means the while loop runs zero extra times (a valid answer first try) or several times (a few invalid answers first). Trace it through: on Cycle 1, if the player types 'maybe' then 'yes', the while loop runs twice before Cycle 2 is even allowed to start. On Cycle 2, if the player types 'no' straight away, the while loop runs zero extra times and the for loop moves on immediately. Either way, the for loop still only counts 2 cycles total — the while loop controls how much work happens inside a cycle, never how many cycles there are.",
+        code: `for round_num in range(1, 3):
+    print("Round", round_num)
+    action = input("scan or wait? ").strip().lower()
+    while action not in ("scan", "wait"):
+        print("Not valid, try again.")
+        action = input("scan or wait? ").strip().lower()
+    print("Round", round_num, "confirmed:", action)`
+      },
+      {
         heading: "Bringing loops together",
         appliesTo: "TODO 1-3",
-        explanation: "Combining a for loop (a fixed number of rotation cycles) with a nested while loop (validating one cycle's command) lets the final mission process a whole queue safely, one validated command at a time.",
+        explanation: "This is the same shape you built in Lesson 9, applied one more time: a for loop gives a fixed number of rotation cycles, and a while loop nested inside validates one cycle's command before the mission moves to the next cycle.",
         code: `for round_num in range(1, 4):
     action = input("Action: ").strip().lower()
     while action not in ("scan", "wait"):
         action = input("Enter scan or wait: ").strip().lower()
     print("Round", round_num, "->", action)`
-      },
-      {
-        heading: "Prompting AI safely",
-        appliesTo: "AI-safety guidance",
-        explanation: "As the mission wraps up, be just as careful asking an AI assistant (like Gemini) for help: be specific about what you want, review the code before using it, and never paste in personal information, passwords, or anything private.",
-        code: `# Example of a clear, safe prompt:
-# "Explain what a while loop does in Python,
-#  using a simple counting example.
-#  Don't include any personal data."`
       }
     ],
     quiz: [
@@ -709,17 +712,17 @@ print("TODO: complete Lesson 9 starter tasks.")
         correctIndex: 0
       },
       {
-        question: "Which is a responsible way to prompt an AI assistant for coding help?",
+        question: "A player types two invalid commands before finally typing a valid one, all during Cycle 3 of 6. How many times does the for loop's cycle counter advance while that's happening?",
         options: [
-          "Be specific about what you want, and don't share personal information",
-          "Paste in your passwords so it can test the login",
-          "Ask a vague question and copy whatever comes back without reading it",
-          "Share a classmate's private information for context"
+          "Zero — the for loop only advances once the while loop is satisfied and exits",
+          "Twice — once for each invalid attempt",
+          "Three times — once for each attempt, valid or not",
+          "The for loop restarts back at Cycle 1"
         ],
         correctIndex: 0
       }
     ],
-    starterCode: `# Lesson 10 starter: Loop Capstone + AI Safety
+    starterCode: `# Lesson 10 starter: Loop Capstone
 
 print("Portal Rotation Control")
 
@@ -740,6 +743,8 @@ hold_count = 0
     # PSEUDOCODE:
     # - If command is not one of the two allowed options, ask again.
     # - Keep repeating until command is valid.
+    # - The for loop above will not move to its next cycle until this
+    #   while loop finishes — that's what makes it "nested".
 
     # TODO 4: Update open_count or hold_count using if/else.
     # PSEUDOCODE:
