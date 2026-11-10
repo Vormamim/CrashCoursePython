@@ -69,6 +69,18 @@
         catch (e) { done(false, 'Could not register: ' + e.message + ' (expected until the cache is deployed)'); }
       } else done(false, 'Not supported in this browser');
 
+      done = row('Code editor (CodeMirror 6)');
+      try {
+        const [{ EditorState }, { EditorView, keymap }, { defaultKeymap }, { python }] = await Promise.all([
+          import('./vendor/codemirror/state.js'), import('./vendor/codemirror/view.js'),
+          import('./vendor/codemirror/commands.js'), import('./vendor/codemirror/lang-python.js')]);
+        const host = document.createElement('div');
+        const view = new EditorView({ parent: host, state: EditorState.create({
+          doc: 'print("hi")', extensions: [python(), keymap.of(defaultKeymap)] }) });
+        view.dispatch({ changes: { from: view.state.doc.length, insert: '\nprint("again")' } });
+        done(view.state.doc.lines === 2, '2 lines typed and read back'); view.destroy();
+      } catch (e) { done(false, String(e)); }
+
       done = row('Python engine (Pyodide, ~14 MB first time)');
       await new Promise(resolve => {
         const w = new Worker('js/smoke-worker.js');
