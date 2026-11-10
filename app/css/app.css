@@ -1,0 +1,5 @@
+/* Student app layout. Tokens and base components come from /shared/css. */
+.split { display: grid; grid-template-columns: minmax(0, 28rem) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.workspace pre { min-height: 6rem; }
+details { margin: 0 0 1em; max-width: var(--measure); }
+summary { cursor: pointer; font-weight: 600; }

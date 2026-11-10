@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Device check</title>
+  <script>
+    try { var t = localStorage.getItem('ccp2:theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="../shared/css/tokens.css">
+  <link rel="stylesheet" href="../shared/css/base.css">
+  <style>
+    .checks { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: .6rem; }
+    .checks li { display: flex; gap: .75rem; align-items: baseline; flex-wrap: wrap; }
+    .checks .chip { min-width: 6.5rem; justify-content: center; }
+    .detail { color: var(--text-dim); font-family: var(--mono); font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <span class="title">Device check</span>
+    <span class="spacer"></span>
+    <button class="btn btn-quiet" type="button" id="theme-toggle">Theme</button>
+  </header>
+  <main class="column prose">
+    <h1>Can this device run the course?</h1>
+    <p>This takes about 10 seconds. It checks the things the course needs. Nothing is sent anywhere.</p>
+    <button class="btn btn-primary" type="button" id="run">Run device check</button>
+    <h2 style="margin-top:1.5rem">Results</h2>
+    <ul class="checks" id="results" aria-live="polite"></ul>
+    <p><button class="btn" type="button" id="dl" disabled>Download a test file</button>
+       <span class="detail" id="dl-note"></span></p>
+    <p class="detail" id="net"></p>
+  </main>
+
+  <script type="module">
+    import { initThemeToggle } from '../shared/js/theme.js';
+    initThemeToggle(document.getElementById('theme-toggle'));
+
+    const list = document.getElementById('results');
+    function row(name) {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="chip chip-info">… Checking</span><span></span><span class="detail"></span>';
+      li.children[1].textContent = name;
+      list.append(li);
+      return (ok, detail) => {
+        const c = li.children[0];
+        c.className = 'chip ' + (ok ? 'chip-ok' : 'chip-bad');
+        c.textContent = ok ? '✓ Pass' : '✗ Problem';
+        li.children[2].textContent = detail || '';
+      };
+    }
+
+    document.getElementById('run').addEventListener('click', async () => {
+      list.replaceChildren();
+
+      let done = row('Saving progress in this browser');
+      try { localStorage.setItem('ccp2:smoke', '1'); localStorage.removeItem('ccp2:smoke'); done(true); }
+      catch (e) { done(false, 'localStorage is blocked: progress will not be saved'); }
+
+      done = row('Course fonts');
+      try { await document.fonts.load('700 1em "Space Grotesk"'); await document.fonts.load('400 1em "IBM Plex Mono"');
+        done(document.fonts.check('700 1em "Space Grotesk"') && document.fonts.check('400 1em "IBM Plex Mono"')); }
+      catch (e) { done(false, String(e)); }
+
+      done = row('Offline cache (service worker)');
+      if ('serviceWorker' in navigator) {
+        try { const reg = await navigator.serviceWorker.register('../sw.js'); done(true, 'scope ' + new URL(reg.scope).pathname); }
+        catch (e) { done(false, 'Could not register: ' + e.message + ' (expected until the cache is deployed)'); }
+      } else done(false, 'Not supported in this browser');
+
+      done = row('Python engine (Pyodide, ~14 MB first time)');
+      await new Promise(resolve => {
+        const w = new Worker('js/smoke-worker.js');
+        const timer = setTimeout(() => { w.terminate(); done(false, 'Timed out after 60 s'); resolve(); }, 60000);
+        w.onmessage = e => { clearTimeout(timer); w.terminate();
+          e.data.ok ? done(true, `${e.data.out} (loaded in ${e.data.loadMs} ms)`) : done(false, e.data.error); resolve(); };
+        w.onerror = e => { clearTimeout(timer); done(false, e.message || 'Worker failed to start'); resolve(); };
+        w.postMessage('go');
+      });
+
+      document.getElementById('dl').disabled = false;
+      const origins = [...new Set(performance.getEntriesByType('resource').map(r => new URL(r.name).origin))];
+      document.getElementById('net').textContent = 'Sites contacted: ' + origins.join(', ') + (origins.length === 1 ? ' (this site only)' : ' (should be this site only)');
+    });
+
+    if (new URLSearchParams(location.search).has('auto')) document.getElementById('run').click();
+
+    document.getElementById('dl').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify({ schema: 'ccp2-smoke/1', ok: true })], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'ccp2-test.json'; a.click();
+      URL.revokeObjectURL(a.href);
+      document.getElementById('dl-note').textContent = 'Check your Downloads folder for ccp2-test.json.';
+    });
+  </script>
+</body>
+</html>

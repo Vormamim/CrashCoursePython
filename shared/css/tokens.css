@@ -1,0 +1,99 @@
+/* CrashCoursePython v2: shared design tokens (CodeInFront house style).
+   Dark is the base. Light applies when data-theme="light", or when the
+   system prefers light and no explicit choice has been made. */
+
+@font-face { font-family: "Space Grotesk"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("../fonts/space-grotesk-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-weight: 500; font-style: normal; font-display: swap;
+  src: url("../fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-weight: 700; font-style: normal; font-display: swap;
+  src: url("../fonts/space-grotesk-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 400; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 500; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-weight: 600; font-style: normal; font-display: swap;
+  src: url("../fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2"); }
+
+:root {
+  color-scheme: dark;
+  --bg: #0A0E13;
+  --panel: #121821;
+  --panel-alt: #1A222C;
+  --border: #26323D;
+  --border-strong: #5E6E7C;
+  --text: #E7EEF4;
+  --text-dim: #8496A6;
+  --text-faint: #54636F;
+  --net: #4FD1C5;
+  --net-dim: #1E4A47;
+  --on-net-dim: #E7EEF4;
+  --host: #F2A65A;
+  --blue: #5B9BF2;
+  --violet: #B98CF2;
+  --green: #8FD17A;
+  --danger: #E4626F;
+
+  --focus: var(--net);
+  --stage-predict: var(--blue);
+  --stage-parsons: var(--violet);
+  --stage-bot: var(--host);
+  --stage-build: var(--net);
+  --stage-belt: var(--green);
+
+  --display: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --measure: 68ch;
+  --radius: 8px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F6F8FA;
+  --panel: #FFFFFF;
+  --panel-alt: #EEF2F5;
+  --border: #D5DDE3;
+  --border-strong: #7A8894;
+  --text: #0F1720;
+  --text-dim: #4A5865;
+  --text-faint: #7A8894;
+  --net: #0F766E;
+  --net-dim: #D3F1EE;
+  --on-net-dim: #0F1720;
+  --host: #A14A07;
+  --blue: #1D5FBF;
+  --violet: #6D3FC0;
+  --green: #2A7330;
+  --danger: #B42335;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #F6F8FA;
+    --panel: #FFFFFF;
+    --panel-alt: #EEF2F5;
+    --border: #D5DDE3;
+    --border-strong: #7A8894;
+    --text: #0F1720;
+    --text-dim: #4A5865;
+    --text-faint: #7A8894;
+    --net: #0F766E;
+    --net-dim: #D3F1EE;
+    --on-net-dim: #0F1720;
+    --host: #A14A07;
+    --blue: #1D5FBF;
+    --violet: #6D3FC0;
+    --green: #2A7330;
+    --danger: #B42335;
+  }
+}
+
+/* Print always uses the light palette. */
+@media print {
+  :root, :root[data-theme] {
+    color-scheme: light;
+    --bg: #FFFFFF; --panel: #FFFFFF; --panel-alt: #F3F5F7; --border: #C9D1D8; --border-strong: #6B7782;
+    --text: #000000; --text-dim: #333D46; --net: #0F766E; --host: #8A3F05; --green: #1F6126; --danger: #9C1C2D;
+  }
+}
